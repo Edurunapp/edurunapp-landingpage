@@ -1,3 +1,84 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.prose table {
+  font-size: 0.9em;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #E5E7EB;
+}
+
+.prose thead th {
+  background-color: #F9FAFB;
+  padding: 12px 16px;
+  color: #374151;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.prose tbody td {
+  padding: 12px 16px;
+  border-top: 1px solid #E5E7EB;
+  vertical-align: middle;
+}
+
+.prose blockquote {
+  font-style: normal; /* Quitar itálica */
+  font-weight: 400;
+  background-color: #EFF6FF; /* Fondo azul muy claro */
+  border-left: 4px solid #2563EB; /* Borde azul Edurun */
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  color: #1F2937;
+  quotes: none; /* Quitar comillas */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Negrita dentro de las notas */
+.prose blockquote strong {
+  color: #2563EB;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.prose blockquote p:first-of-type::before,
+.prose blockquote p:last-of-type::after {
+  content: none; /* Asegurar que no salgan comillas gigantes */
+}
+
+/* Estilo para los bloques de código */
+pre {
+  background-color: #1F2937 !important; /* Fondo oscuro Edurun */
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  position: relative; /* Para posicionar el botón */
+  overflow-x: auto;
+}
+
+/* Botón de copiar */
+.copy-code {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  opacity: 0; /* Oculto por defecto */
+  transition: opacity 0.2s;
+}
+
+pre:hover .copy-code {
+  opacity: 1; /* Mostrar al pasar el mouse */
+}
