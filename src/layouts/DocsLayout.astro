@@ -73,13 +73,20 @@ const nextDoc = flatDocs[currentIndex + 1];
         .goog-te-banner-frame { display: none !important; }
         body { top: 0px !important; }
         
-        /* Ocultar el selector pero mantenerlo en el DOM */
+        /* Ocultar selector de Google (VISIBILITY HIDDEN, NO DISPLAY NONE) */
         #google_translate_element { 
-            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            overflow: hidden;
+            z-index: -1; 
+            visibility: hidden;
         }
-        .skiptranslate { display: none !important; }
         
-        /* Focus outline reset */
+        .skiptranslate { display: none !important; }
         button:focus { outline: none !important; }
     </style>
   </head>
@@ -101,19 +108,19 @@ const nextDoc = flatDocs[currentIndex + 1];
 
         <div class="flex items-center gap-4">
              <div class="relative group hidden sm:block">
-                <button class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-edurun-blue transition-colors px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50 dark:bg-gray-800">
+                <button type="button" class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-edurun-blue transition-colors px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50 dark:bg-gray-800">
                     <span id="current-lang-label">Español</span>
                     <svg class="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                 </button>
                 
-                <div class="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top-right z-50 py-1 flex flex-col overflow-hidden">
-                    <button type="button" onclick="changeLanguage('es')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2">
+                <div class="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top-right z-[100] py-1 flex flex-col overflow-hidden">
+                    <button type="button" onclick="changeLanguage('es')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2 cursor-pointer">
                         <span>🇪🇸 Español</span>
                     </button>
-                    <button type="button" onclick="changeLanguage('en')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2">
+                    <button type="button" onclick="changeLanguage('en')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2 cursor-pointer">
                         <span>🇺🇸 English</span>
                     </button>
-                    <button type="button" onclick="changeLanguage('pt')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2">
+                    <button type="button" onclick="changeLanguage('pt')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2 cursor-pointer">
                         <span>🇧🇷 Português</span>
                     </button>
                 </div>
@@ -216,7 +223,7 @@ const nextDoc = flatDocs[currentIndex + 1];
     <div id="google_translate_element"></div>
 
     <script is:inline>
-        // 1. Google Translate Init
+        // 1. Inicializar Google Translate
         window['googleTranslateElementInit'] = function() {
             if (window['google'] && window['google'].translate) {
                 new window['google'].translate.TranslateElement({
@@ -227,25 +234,34 @@ const nextDoc = flatDocs[currentIndex + 1];
             }
         }
 
-        // 2. FUNCIÓN DE CAMBIO DE IDIOMA (INFALIBLE: USA COOKIES)
+        // 2. Función de Cambio de Idioma (TRY HARD)
         window['changeLanguage'] = function(lang) {
-            // Establecer la cookie de Google Translate
-            // Formato: /idioma_origen/idioma_destino
-            document.cookie = `googtrans=/es/${lang}; path=/; domain=${window.location.hostname}`;
-            document.cookie = `googtrans=/es/${lang}; path=/;`; // Fallback por si acaso
-
-            // Actualizar etiqueta visual
+            // Actualizar etiqueta visual inmediatamente
             const labels = { 'es': 'Español', 'en': 'English', 'pt': 'Português' };
             const label = document.getElementById('current-lang-label');
             if(label) label.innerText = labels[lang] || 'Idioma';
 
-            // Recargar la página para que Google aplique la cookie inmediatamente
-            // Esto es necesario la primera vez que se cambia de idioma para asegurar que el script de Google lo tome.
-            location.reload(); 
+            // Método A: Intentar usar el select de Google (Si existe y cargó)
+            const select = document.querySelector('.goog-te-combo');
+            if (select) {
+                select.value = lang;
+                select.dispatchEvent(new Event('change', { bubbles: true })); // IMPORTANTE: bubbles: true
+            } 
+            
+            // Método B: Forzar Cookie y Recargar (Esto arregla el 99% de fallos en localhost)
+            // Google Translate lee la cookie 'googtrans'
+            document.cookie = `googtrans=/es/${lang}; path=/`; 
+            
+            // Si el select no funcionó instantáneamente (o no existe), recargamos la página para aplicar la cookie
+            if (!select || select.value !== lang) {
+                console.log("Forzando recarga para traducción...");
+                setTimeout(() => location.reload(), 200);
+            }
         };
 
-        // Leer cookie al inicio para poner la etiqueta correcta
-        function updateLangLabel() {
+        // 3. UI Logic (Sidebar, Toggle, Label Update)
+        function setupUI() {
+            // Actualizar etiqueta según cookie al cargar
             const match = document.cookie.match(/googtrans=\/es\/(\w+)/);
             if (match && match[1]) {
                 const lang = match[1];
@@ -253,11 +269,8 @@ const nextDoc = flatDocs[currentIndex + 1];
                 const label = document.getElementById('current-lang-label');
                 if(label && labels[lang]) label.innerText = labels[lang];
             }
-        }
 
-        // 3. UI Setup
-        function setupUI() {
-            updateLangLabel();
+            // Menú Móvil
             const btn = document.getElementById('menu-toggle');
             const sidebar = document.getElementById('sidebar-left');
             const backdrop = document.getElementById('backdrop');
@@ -277,7 +290,7 @@ const nextDoc = flatDocs[currentIndex + 1];
             if(btn) btn.addEventListener('click', toggle);
             if(backdrop) backdrop.addEventListener('click', toggle);
 
-            // Copy buttons logic
+            // Copy buttons
             document.querySelectorAll('pre').forEach((pre) => {
               if (pre.parentNode && pre.parentNode.querySelector('.copy-code')) return;
               const wrapper = document.createElement('div');
