@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+// 1. Importamos el tipo necesario para que TypeScript no se queje
+import type { CollectionEntry } from 'astro:content';
+import DocsLayout from '../../layouts/DocsLayout.astro';
+
+
+// 2. Definimos que 'entry' es un documento de la colección 'docs'
+interface Props {
+  entry: CollectionEntry<'docs'>;
+}
+
+export async function getStaticPaths() {
+  const docsEntries = await getCollection('docs');
+  return docsEntries.map((entry: { slug: any; }) => ({
+    params: { slug: entry.slug }, 
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await entry.render(); // <--- Extraemos 'headings'
+---
+
+<DocsLayout title={entry.data.title} headings={headings}>
+  <Content />
+</DocsLayout>
