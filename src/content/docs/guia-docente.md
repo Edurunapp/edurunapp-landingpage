@@ -63,8 +63,9 @@ Para crear una nueva actividad, diríjase al "Panel de Actividades" en Edurun y 
     
     ```
     
-    > **Nota:** El sistema calculará la calificación basándose en el porcentaje de tests aprobados.
-    > **Nota:** Un instructivo mas detallado se encuentra dentro de la aplicacion, en el apartado de Actividades > Crear Actividad > Test Unitarios.
+    > **Nota:**
+    > - El sistema calculará la calificación basándose en el porcentaje de tests aprobados.
+    > - Un instructivo mas detallado se encuentra dentro de la aplicacion, en el apartado de Actividades > Crear Actividad > Test Unitarios.
  
 ----------
 

@@ -2,9 +2,10 @@
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
+import { ClientRouter } from 'astro:transitions'; 
+import ThemeToggle from '../components/ThemeToggle.astro';
 import '../styles/global.css';
 
-// 1. Definimos los tipos para que TypeScript entienda la estructura
 interface Props {
   title: string;
   headings?: MarkdownHeading[];
@@ -12,33 +13,40 @@ interface Props {
 
 type GroupedDocs = Record<string, {
   type: 'file' | 'folder';
-  item?: CollectionEntry<'docs'>; // Solo si es file
-  items?: CollectionEntry<'docs'>[]; // Solo si es folder
+  item?: CollectionEntry<'docs'>;
+  items?: CollectionEntry<'docs'>[];
 }>;
 
 const { title, headings } = Astro.props;
 
-// 2. Lógica para el Menú Lateral (Tipada correctamente)
+// --- Lógica de Documentos ---
 const allDocs = await getCollection('docs');
-
 const groupedDocs = allDocs.reduce<GroupedDocs>((acc, doc) => {
   const parts = doc.slug.split('/');
   if (parts.length > 1) {
-    // Es un archivo dentro de una carpeta
     const folderName = parts[0];
-    if (!acc[folderName]) {
-      acc[folderName] = { type: 'folder', items: [] };
-    }
+    if (!acc[folderName]) acc[folderName] = { type: 'folder', items: [] };
     acc[folderName].items?.push(doc);
   } else {
-    // Es un archivo raíz
     acc[doc.slug] = { type: 'file', item: doc };
   }
   return acc;
 }, {});
 
-// Orden manual de las secciones
 const sortOrder = ['guia-docente', 'instalacion', 'arquitectura', 'riesgos'];
+
+const flatDocs = sortOrder.flatMap(key => {
+  const entry = groupedDocs[key];
+  if (!entry) return [];
+  if (entry.type === 'file') return [entry.item];
+  if (entry.type === 'folder') return entry.items || [];
+  return [];
+});
+
+const currentSlug = Astro.url.pathname.replace(/^\/docs\//, '').replace(/\/$/, '');
+const currentIndex = flatDocs.findIndex(doc => doc?.slug === currentSlug);
+const prevDoc = flatDocs[currentIndex - 1];
+const nextDoc = flatDocs[currentIndex + 1];
 ---
 
 <!doctype html>
@@ -48,160 +56,254 @@ const sortOrder = ['guia-docente', 'instalacion', 'arquitectura', 'riesgos'];
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/webp" href="/logo.webp" />
     <title>{title} | Documentación Edurun</title>
-  </head>
-  <body class="bg-white text-edurun-dark flex min-h-screen">
-    
-    <aside class="w-64 bg-gray-50 border-r border-gray-200 fixed h-full hidden md:block overflow-y-auto z-20">
-      <div class="p-6">
-        <a href="/" class="flex items-center gap-2 mb-8 group">
-            <img src="/logo.png" class="w-8 h-8 group-hover:scale-110 transition-transform" alt="Logo">
-            <span class="font-bold text-lg text-gray-800">Edurun Docs</span>
-        </a>
-        
-        <nav class="space-y-2">
-          {sortOrder.map((key) => {
-            const entry = groupedDocs[key];
-            if (!entry) return null;
+    <ClientRouter />
 
-            if (entry.type === 'file' && entry.item) {
-              // ENLACE SIMPLE
-              const doc = entry.item;
-              const isActive = Astro.url.pathname.includes(doc.slug);
-              return (
-                <a 
-                  href={`/docs/${doc.slug}`}
-                  class:list={[
-                    "block px-3 py-2 rounded-md text-sm font-medium transition-all",
-                    isActive 
-                      ? "bg-blue-50 text-edurun-blue border-l-4 border-edurun-blue font-bold shadow-sm" 
-                      : "text-gray-600 hover:bg-white hover:text-gray-900 hover:shadow-sm"
-                  ]}
-                >
-                  {doc.data.title}
-                </a>
-              );
-            } else if (entry.type === 'folder' && entry.items) {
-              // CARPETA DESPLEGABLE
-              const isOpen = entry.items.some(d => Astro.url.pathname.includes(d.slug));
-              return (
-                <details class="group/folder" open={isOpen}>
-                  <summary class="flex items-center justify-between px-3 py-2 text-sm font-bold text-gray-700 cursor-pointer hover:bg-white hover:shadow-sm rounded-md transition-all select-none">
-                    <span class="capitalize flex items-center gap-2">
-                      <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
-                      {key.replace('-', ' ')}
-                    </span>
-                    <svg class="w-4 h-4 transition-transform group-open/folder:rotate-180 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </summary>
-                  
-                  <div class="mt-1 ml-4 border-l-2 border-gray-200 pl-2 space-y-1">
-                    {entry.items.map((doc) => (
-                      <a 
-                        href={`/docs/${doc.slug}`}
-                        class:list={[
-                          "block px-3 py-1.5 rounded-md text-sm transition-colors relative",
-                          Astro.url.pathname.includes(doc.slug)
-                            ? "text-edurun-blue font-semibold bg-blue-50/50"
-                            : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                        ]}
-                      >
-                        {doc.data.title}
-                      </a>
-                    ))}
-                  </div>
-                </details>
-              );
-            }
-          })}
-        </nav>
-
-        <div class="mt-8 pt-8 border-t border-gray-200">
-            <a href="/" class="flex items-center gap-2 text-xs text-gray-500 hover:text-edurun-blue transition-colors">
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-              Volver al inicio
-            </a>
-        </div>
-      </div>
-    </aside>
-
-    <main class="flex-1 md:ml-64 xl:mr-64 min-w-0">
-      <div class="max-w-4xl mx-auto p-8 md:p-12">
-        
-        <nav class="flex items-center text-sm text-gray-500 mb-8 space-x-2 overflow-x-auto whitespace-nowrap pb-2">
-          <a href="/docs/guia-docente" class="hover:text-edurun-blue transition-colors">Docs</a>
-          <span class="text-gray-300">/</span>
-          {Astro.url.pathname.split('/').slice(2, -1).map((segment) => (
-            <>
-              <span class="capitalize text-gray-600">{segment.replace('-', ' ')}</span>
-              <span class="text-gray-300">/</span>
-            </>
-          ))}
-          <span class="text-edurun-blue font-medium truncate">{title}</span>
-        </nav>
-
-        <article class="prose prose-lg prose-slate max-w-none prose-headings:scroll-mt-20 prose-a:text-edurun-blue hover:prose-a:text-edurun-purple prose-img:rounded-xl prose-img:shadow-lg">
-          <!--<h1 class="text-4xl font-extrabold text-gray-900 mb-6">{title}</h1>-->
-          <slot />
-        </article>
-
-        <div class="mt-16 pt-8 border-t border-gray-100 flex justify-between text-sm text-gray-400">
-          <span>Última actualización: {new Date().toLocaleDateString()}</span>
-          <a href="#" class="hover:text-gray-600">Editar en GitHub</a>
-        </div>
-      </div>
-    </main>
-
-    <aside class="hidden xl:block w-64 fixed right-0 top-0 h-full bg-white border-l border-gray-100 z-10 overflow-y-auto">
-      <div class="p-8">
-        <h5 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">En esta página</h5>
-        <ul class="space-y-3 text-sm border-l-2 border-gray-100">
-          {headings && headings.map((h) => (
-            <li class={`pl-3 -ml-[2px] ${h.depth === 3 ? 'pl-6' : ''}`}>
-              <a 
-                href={`#${h.slug}`} 
-                class="block text-gray-500 hover:text-edurun-blue hover:border-l-2 hover:border-edurun-blue -ml-[2px] pl-3 py-0.5 transition-all truncate"
-                title={h.text}
-              >
-                {h.text}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </aside>
-
-    <script>
-      document.querySelectorAll('pre').forEach((pre) => {
-        const wrapper = document.createElement('div');
-        wrapper.style.position = 'relative';
-        if(pre.parentNode) {
-            pre.parentNode.insertBefore(wrapper, pre);
-        }
-        wrapper.appendChild(pre);
-
-        const button = document.createElement('button');
-        button.className = 'copy-code absolute top-3 right-3 px-2 py-1 bg-gray-700/50 hover:bg-edurun-blue text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-all border border-white/10 backdrop-blur-sm';
-        button.innerText = 'Copiar';
-        
-        wrapper.classList.add('group');
-        wrapper.appendChild(button);
-
-        button.addEventListener('click', async () => {
-          const code = pre.querySelector('code')?.innerText;
-          if (code) {
-            await navigator.clipboard.writeText(code);
-            button.innerText = '¡Copiado!';
-            button.classList.add('bg-green-500', 'text-white');
-            
-            setTimeout(() => {
-              button.innerText = 'Copiar';
-              button.classList.remove('bg-green-500', 'text-white');
-            }, 2000);
-          }
-        });
-      });
+    <script is:inline>
+      const applyTheme = () => {
+        const theme = typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : 'light';
+        if (theme === 'dark') document.documentElement.classList.add('dark');
+        else document.documentElement.classList.remove('dark');
+      };
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
     </script>
 
+    <style is:global>
+        /* Ocultar banner de Google */
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0px !important; }
+        
+        /* Ocultar el selector pero mantenerlo en el DOM */
+        #google_translate_element { 
+            display: none;
+        }
+        .skiptranslate { display: none !important; }
+        
+        /* Focus outline reset */
+        button:focus { outline: none !important; }
+    </style>
+  </head>
+  
+  <body class="bg-white dark:bg-[#1e1e20] text-gray-800 dark:text-gray-200 min-h-screen transition-colors duration-300 antialiased">
+    
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#1e1e20]/95 border-b border-gray-200 dark:border-gray-700 backdrop-blur-md h-16 transition-colors duration-300">
+      <div class="h-full px-4 md:px-6 flex items-center justify-between">
+        
+        <div class="flex items-center gap-4">
+            <button id="menu-toggle" class="md:hidden text-gray-500 hover:text-edurun-blue focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <a href="/" class="flex items-center gap-2 group">
+                <img src="/logo.webp" class="w-8 h-8 group-hover:scale-110 transition-transform" alt="Logo">
+                <span class="font-bold text-xl text-gray-900 dark:text-white tracking-tight">Edurun<span class="text-edurun-blue">Docs</span></span>
+            </a>
+        </div>
+
+        <div class="flex items-center gap-4">
+             <div class="relative group hidden sm:block">
+                <button class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-edurun-blue transition-colors px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50 dark:bg-gray-800">
+                    <span id="current-lang-label">Español</span>
+                    <svg class="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                
+                <div class="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top-right z-50 py-1 flex flex-col overflow-hidden">
+                    <button type="button" onclick="changeLanguage('es')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2">
+                        <span>🇪🇸 Español</span>
+                    </button>
+                    <button type="button" onclick="changeLanguage('en')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2">
+                        <span>🇺🇸 English</span>
+                    </button>
+                    <button type="button" onclick="changeLanguage('pt')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2">
+                        <span>🇧🇷 Português</span>
+                    </button>
+                </div>
+            </div>
+
+            <ThemeToggle />
+        </div>
+      </div>
+    </header>
+
+    <div class="flex pt-16 min-h-screen">
+        
+        <aside id="sidebar-left" class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-4rem)] transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out bg-gray-50 dark:bg-[#18181a] border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
+            <div class="p-6">
+                <nav class="space-y-2">
+                    {sortOrder.map((key) => {
+                        const entry = groupedDocs[key];
+                        if (!entry) return null;
+                        
+                        if (entry.type === 'file' && entry.item) {
+                            return (
+                                <a href={`/docs/${entry.item.slug}`} class={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${Astro.url.pathname.includes(entry.item.slug) ? 'bg-blue-50 dark:bg-blue-900/20 text-edurun-blue' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
+                                    {entry.item.data.title}
+                                </a>
+                            );
+                        } else if (entry.type === 'folder' && entry.items) {
+                            return (
+                                <details class="group/folder" open>
+                                    <summary class="flex items-center justify-between px-3 py-2 text-sm font-bold text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md select-none transition-colors">
+                                        <span class="capitalize flex items-center gap-2">
+                                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+                                            {key.replace('-', ' ')}
+                                        </span>
+                                        <svg class="w-4 h-4 transition-transform group-open/folder:rotate-180 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                                    </summary>
+                                    <div class="mt-1 ml-4 border-l-2 border-gray-200 dark:border-gray-700 pl-2 space-y-1">
+                                        {entry.items.map(doc => (
+                                            <a href={`/docs/${doc.slug}`} class={`block px-3 py-1.5 rounded-md text-sm transition-colors ${Astro.url.pathname.includes(doc.slug) ? 'text-edurun-blue font-semibold bg-blue-50/50 dark:bg-blue-900/10' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
+                                                {doc.data.title}
+                                            </a>
+                                        ))}
+                                    </div>
+                                </details>
+                            );
+                        }
+                    })}
+                </nav>
+            </div>
+        </aside>
+        
+        <div id="backdrop" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden backdrop-blur-sm top-16"></div>
+
+        <main class="flex-1 min-w-0 md:ml-64 xl:mr-64 p-8 md:p-12 transition-all duration-300 ease-in-out">
+            <div class="max-w-4xl mx-auto">
+                <nav class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-8 overflow-x-auto whitespace-nowrap">
+                    <span class="text-edurun-blue font-semibold">Docs</span>
+                    <span class="mx-2 text-gray-300 dark:text-gray-600">/</span>
+                    <span class="font-medium text-gray-900 dark:text-white truncate">{title}</span>
+                </nav>
+
+                <article class="prose prose-lg prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-a:text-edurun-blue hover:prose-a:text-edurun-purple prose-img:rounded-xl prose-img:shadow-lg">
+                    <slot />
+                </article>
+
+                <div class="mt-16 pt-8 border-t border-gray-100 dark:border-gray-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {prevDoc ? (
+                        <a href={`/docs/${prevDoc.slug}`} class="group p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-edurun-blue dark:hover:border-edurun-blue hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all">
+                            <div class="text-xs text-gray-400 font-medium uppercase mb-1">Anterior</div>
+                            <div class="text-edurun-blue font-semibold group-hover:underline">{prevDoc.data.title}</div>
+                        </a>
+                    ) : <div></div>}
+                    
+                    {nextDoc && (
+                        <a href={`/docs/${nextDoc.slug}`} class="group p-4 border border-gray-200 dark:border-gray-700 rounded-xl text-right hover:border-edurun-blue dark:hover:border-edurun-blue hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all">
+                            <div class="text-xs text-gray-400 font-medium uppercase mb-1">Siguiente</div>
+                            <div class="text-edurun-blue font-semibold group-hover:underline">{nextDoc.data.title}</div>
+                        </a>
+                    )}
+                </div>
+            </div>
+        </main>
+
+        <aside class="hidden xl:block fixed top-16 right-0 w-64 h-[calc(100vh-4rem)] bg-white dark:bg-[#1e1e20] border-l border-gray-200 dark:border-gray-700 overflow-y-auto transition-all duration-300 ease-in-out">
+            <div class="p-8">
+                <h5 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4">En esta página</h5>
+                <ul class="space-y-3 text-sm border-l-2 border-gray-100 dark:border-gray-800">
+                    {headings?.map((h) => (
+                        <li class={`pl-3 -ml-[2px] ${h.depth === 3 ? 'pl-6' : ''}`}>
+                            <a href={`#${h.slug}`} class="block text-gray-500 dark:text-gray-400 hover:text-edurun-blue dark:hover:text-edurun-blue hover:border-l-2 hover:border-edurun-blue -ml-[2px] pl-3 py-0.5 transition-all truncate">
+                                {h.text}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+
+    <div id="google_translate_element"></div>
+
+    <script is:inline>
+        // 1. Google Translate Init
+        window['googleTranslateElementInit'] = function() {
+            if (window['google'] && window['google'].translate) {
+                new window['google'].translate.TranslateElement({
+                    pageLanguage: 'es', 
+                    includedLanguages: 'en,pt,es',
+                    autoDisplay: false 
+                }, 'google_translate_element');
+            }
+        }
+
+        // 2. FUNCIÓN DE CAMBIO DE IDIOMA (INFALIBLE: USA COOKIES)
+        window['changeLanguage'] = function(lang) {
+            // Establecer la cookie de Google Translate
+            // Formato: /idioma_origen/idioma_destino
+            document.cookie = `googtrans=/es/${lang}; path=/; domain=${window.location.hostname}`;
+            document.cookie = `googtrans=/es/${lang}; path=/;`; // Fallback por si acaso
+
+            // Actualizar etiqueta visual
+            const labels = { 'es': 'Español', 'en': 'English', 'pt': 'Português' };
+            const label = document.getElementById('current-lang-label');
+            if(label) label.innerText = labels[lang] || 'Idioma';
+
+            // Recargar la página para que Google aplique la cookie inmediatamente
+            // Esto es necesario la primera vez que se cambia de idioma para asegurar que el script de Google lo tome.
+            location.reload(); 
+        };
+
+        // Leer cookie al inicio para poner la etiqueta correcta
+        function updateLangLabel() {
+            const match = document.cookie.match(/googtrans=\/es\/(\w+)/);
+            if (match && match[1]) {
+                const lang = match[1];
+                const labels = { 'es': 'Español', 'en': 'English', 'pt': 'Português' };
+                const label = document.getElementById('current-lang-label');
+                if(label && labels[lang]) label.innerText = labels[lang];
+            }
+        }
+
+        // 3. UI Setup
+        function setupUI() {
+            updateLangLabel();
+            const btn = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar-left');
+            const backdrop = document.getElementById('backdrop');
+            
+            const toggle = () => {
+                if(sidebar && backdrop) {
+                    const isClosed = sidebar.classList.contains('-translate-x-full');
+                    if (isClosed) {
+                        sidebar.classList.remove('-translate-x-full');
+                        backdrop.classList.remove('hidden');
+                    } else {
+                        sidebar.classList.add('-translate-x-full');
+                        backdrop.classList.add('hidden');
+                    }
+                }
+            };
+            if(btn) btn.addEventListener('click', toggle);
+            if(backdrop) backdrop.addEventListener('click', toggle);
+
+            // Copy buttons logic
+            document.querySelectorAll('pre').forEach((pre) => {
+              if (pre.parentNode && pre.parentNode.querySelector('.copy-code')) return;
+              const wrapper = document.createElement('div');
+              wrapper.style.position = 'relative';
+              if(pre.parentNode) pre.parentNode.insertBefore(wrapper, pre);
+              wrapper.appendChild(pre);
+              const button = document.createElement('button');
+              button.className = 'copy-code absolute top-3 right-3 px-2 py-1 bg-gray-700/50 hover:bg-edurun-blue text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-all border border-white/10 backdrop-blur-sm';
+              button.innerText = 'Copiar';
+              wrapper.classList.add('group');
+              wrapper.appendChild(button);
+              button.addEventListener('click', async () => {
+                const code = pre.querySelector('code')?.innerText;
+                if (code) {
+                    await navigator.clipboard.writeText(code);
+                    button.innerText = '¡Copiado!';
+                    button.classList.add('bg-green-500');
+                    setTimeout(() => { button.innerText = 'Copiar'; button.classList.remove('bg-green-500'); }, 2000);
+                }
+              });
+            });
+        }
+
+        setupUI();
+        document.addEventListener('astro:page-load', setupUI);
+    </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </body>
 </html>

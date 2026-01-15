@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* === SCROLLBAR PERSONALIZADA (Opcional pero recomendado) === */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
+}
+
+/* === ESTILOS DE TABLAS (Mejorados para Dark Mode) === */
 .prose table {
   font-size: 0.9em;
   width: 100%;
@@ -12,8 +28,13 @@
   border: 1px solid #E5E7EB;
 }
 
+/* Borde de la tabla en modo oscuro */
+.dark .prose table {
+  border-color: #374151; /* Gray 700 */
+}
+
 .prose thead th {
-  background-color: #F9FAFB;
+  background-color: #F9FAFB; /* Fondo claro por defecto */
   padding: 12px 16px;
   color: #374151;
   font-weight: 600;
@@ -22,26 +43,38 @@
   letter-spacing: 0.05em;
 }
 
+/* Encabezado de tabla en modo oscuro (CRÍTICO) */
+.dark .prose thead th {
+  background-color: #1F2937; /* Gray 800 */
+  color: #D1D5DB; /* Gray 300 */
+}
+
 .prose tbody td {
   padding: 12px 16px;
   border-top: 1px solid #E5E7EB;
   vertical-align: middle;
 }
 
+/* Celdas en modo oscuro */
+.dark .prose tbody td {
+  border-color: #374151; /* Borde oscuro */
+  color: #D1D5DB;
+}
+
+/* === NOTAS / BLOCKQUOTES === */
 .prose blockquote {
-  font-style: normal; /* Quitar itálica */
+  font-style: normal;
   font-weight: 400;
-  background-color: #EFF6FF; /* Fondo azul muy claro */
-  border-left: 4px solid #2563EB; /* Borde azul Edurun */
+  background-color: #EFF6FF; /* Fondo azul claro */
+  border-left: 4px solid #2563EB;
   border-radius: 0.5rem;
   padding: 1rem 1.5rem;
   margin: 1.5rem 0;
   color: #1F2937;
-  quotes: none; /* Quitar comillas */
+  quotes: none;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-/* Negrita dentro de las notas */
 .prose blockquote strong {
   color: #2563EB;
   display: block;
@@ -50,20 +83,20 @@
 
 .prose blockquote p:first-of-type::before,
 .prose blockquote p:last-of-type::after {
-  content: none; /* Asegurar que no salgan comillas gigantes */
+  content: none;
 }
 
-/* Estilo para los bloques de código */
+/* === BLOQUES DE CÓDIGO === */
 pre {
-  background-color: #1F2937 !important; /* Fondo oscuro Edurun */
+  background-color: #1F2937 !important; /* Siempre oscuro, estándar en docs */
   border-radius: 0.5rem;
   padding: 1rem;
   margin: 1.5rem 0;
-  position: relative; /* Para posicionar el botón */
+  position: relative;
   overflow-x: auto;
 }
 
-/* Botón de copiar */
+/* === BOTÓN DE COPIAR === */
 .copy-code {
   position: absolute;
   top: 0.5rem;
@@ -75,10 +108,40 @@ pre {
   padding: 0.25rem 0.5rem;
   font-size: 0.75rem;
   cursor: pointer;
-  opacity: 0; /* Oculto por defecto */
-  transition: opacity 0.2s;
+  opacity: 0;
+  transition: all 0.2s;
 }
 
 pre:hover .copy-code {
-  opacity: 1; /* Mostrar al pasar el mouse */
+  opacity: 1;
+}
+.copy-code:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* === AJUSTES DE TIPOGRAFÍA MODO OSCURO (Tailwind Prose) === */
+.dark .prose {
+  color: #D1D5DB; /* Texto general gris claro */
+}
+.dark .prose h1, .dark .prose h2, .dark .prose h3, .dark .prose h4 {
+  color: #F9FAFB; /* Títulos blancos */
+}
+.dark .prose strong {
+  color: #F3F4F6;
+}
+.dark .prose a {
+  color: #60A5FA; /* Enlaces azules brillantes */
+}
+.dark .prose code {
+  color: #E5E7EB;
+}
+/* Nota en modo oscuro */
+.dark .prose blockquote {
+  background-color: #1E293B; /* Slate 800 */
+  border-left-color: #3B82F6;
+  color: #E5E7EB;
+  box-shadow: none; /* Quitamos sombra en dark mode */
+}
+.dark .prose blockquote strong {
+  color: #60A5FA; /* Título de la nota más claro */
 }
