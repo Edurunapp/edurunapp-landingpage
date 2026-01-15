@@ -19,7 +19,6 @@ type GroupedDocs = Record<string, {
 
 const { title, headings } = Astro.props;
 
-// --- Lógica de Documentos ---
 const allDocs = await getCollection('docs');
 const groupedDocs = allDocs.reduce<GroupedDocs>((acc, doc) => {
   const parts = doc.slug.split('/');
@@ -69,23 +68,10 @@ const nextDoc = flatDocs[currentIndex + 1];
     </script>
 
     <style is:global>
-        /* Ocultar banner de Google */
+        /* Ocultar UI de Google Translate completamente */
         .goog-te-banner-frame { display: none !important; }
         body { top: 0px !important; }
-        
-        /* Ocultar selector de Google (VISIBILITY HIDDEN, NO DISPLAY NONE) */
-        #google_translate_element { 
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-            overflow: hidden;
-            z-index: -1; 
-            visibility: hidden;
-        }
-        
+        #google_translate_element { display: none !important; }
         .skiptranslate { display: none !important; }
         button:focus { outline: none !important; }
     </style>
@@ -125,21 +111,18 @@ const nextDoc = flatDocs[currentIndex + 1];
                     </button>
                 </div>
             </div>
-
             <ThemeToggle />
         </div>
       </div>
     </header>
 
     <div class="flex pt-16 min-h-screen">
-        
         <aside id="sidebar-left" class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-4rem)] transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out bg-gray-50 dark:bg-[#18181a] border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
             <div class="p-6">
                 <nav class="space-y-2">
                     {sortOrder.map((key) => {
                         const entry = groupedDocs[key];
                         if (!entry) return null;
-                        
                         if (entry.type === 'file' && entry.item) {
                             return (
                                 <a href={`/docs/${entry.item.slug}`} class={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${Astro.url.pathname.includes(entry.item.slug) ? 'bg-blue-50 dark:bg-blue-900/20 text-edurun-blue' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
@@ -217,51 +200,38 @@ const nextDoc = flatDocs[currentIndex + 1];
                 </ul>
             </div>
         </aside>
-
     </div>
 
     <div id="google_translate_element"></div>
 
     <script is:inline>
-        // 1. Inicializar Google Translate
         window['googleTranslateElementInit'] = function() {
-            if (window['google'] && window['google'].translate) {
-                new window['google'].translate.TranslateElement({
-                    pageLanguage: 'es', 
-                    includedLanguages: 'en,pt,es',
-                    autoDisplay: false 
-                }, 'google_translate_element');
-            }
+            new google.translate.TranslateElement({ pageLanguage: 'es', includedLanguages: 'en,pt,es', autoDisplay: false }, 'google_translate_element');
         }
 
-        // 2. Función de Cambio de Idioma (TRY HARD)
+        // --- FUNCIÓN NUCLEAR: SET COOKIE & RELOAD ---
         window['changeLanguage'] = function(lang) {
-            // Actualizar etiqueta visual inmediatamente
-            const labels = { 'es': 'Español', 'en': 'English', 'pt': 'Português' };
-            const label = document.getElementById('current-lang-label');
-            if(label) label.innerText = labels[lang] || 'Idioma';
+            console.log("Forzando cambio de idioma a:", lang);
+            
+            const domain = window.location.hostname;
+            
+            // 1. Limpiar cookies antiguas (para evitar conflictos)
+            document.cookie = `googtrans=; path=/; domain=${domain}; expires=Thu, 01 Jan 1970 00:00:00 UTC`;
+            document.cookie = `googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC`;
 
-            // Método A: Intentar usar el select de Google (Si existe y cargó)
-            const select = document.querySelector('.goog-te-combo');
-            if (select) {
-                select.value = lang;
-                select.dispatchEvent(new Event('change', { bubbles: true })); // IMPORTANTE: bubbles: true
-            } 
-            
-            // Método B: Forzar Cookie y Recargar (Esto arregla el 99% de fallos en localhost)
-            // Google Translate lee la cookie 'googtrans'
-            document.cookie = `googtrans=/es/${lang}; path=/`; 
-            
-            // Si el select no funcionó instantáneamente (o no existe), recargamos la página para aplicar la cookie
-            if (!select || select.value !== lang) {
-                console.log("Forzando recarga para traducción...");
-                setTimeout(() => location.reload(), 200);
+            if (lang !== 'es') {
+                // 2. Si no es el idioma original, establecer la cookie mágica
+                // Google usa: /idioma_origen/idioma_destino
+                document.cookie = `googtrans=/es/${lang}; path=/; domain=${domain}`;
+                document.cookie = `googtrans=/es/${lang}; path=/;`; // Doble seguridad
             }
+
+            // 3. Recargar la página para que Google detecte la cookie y traduzca
+            location.reload();
         };
 
-        // 3. UI Logic (Sidebar, Toggle, Label Update)
         function setupUI() {
-            // Actualizar etiqueta según cookie al cargar
+            // Actualizar etiqueta al cargar leyendo la cookie
             const match = document.cookie.match(/googtrans=\/es\/(\w+)/);
             if (match && match[1]) {
                 const lang = match[1];
@@ -270,11 +240,9 @@ const nextDoc = flatDocs[currentIndex + 1];
                 if(label && labels[lang]) label.innerText = labels[lang];
             }
 
-            // Menú Móvil
             const btn = document.getElementById('menu-toggle');
             const sidebar = document.getElementById('sidebar-left');
             const backdrop = document.getElementById('backdrop');
-            
             const toggle = () => {
                 if(sidebar && backdrop) {
                     const isClosed = sidebar.classList.contains('-translate-x-full');
@@ -290,7 +258,6 @@ const nextDoc = flatDocs[currentIndex + 1];
             if(btn) btn.addEventListener('click', toggle);
             if(backdrop) backdrop.addEventListener('click', toggle);
 
-            // Copy buttons
             document.querySelectorAll('pre').forEach((pre) => {
               if (pre.parentNode && pre.parentNode.querySelector('.copy-code')) return;
               const wrapper = document.createElement('div');
@@ -313,7 +280,6 @@ const nextDoc = flatDocs[currentIndex + 1];
               });
             });
         }
-
         setupUI();
         document.addEventListener('astro:page-load', setupUI);
     </script>
