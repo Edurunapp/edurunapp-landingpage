@@ -53,7 +53,7 @@ Asegúrese de que el formulario esté en modo **Entrada Manual**.
 ![Imagen de referencia 3](https://edurun.exposmart.cl/wp-content/uploads/2026/01/Canvas_img3.png)
 
 | Campo | Valor Requerido |
-|---|---|---|
+|---|---|
 | **Nombre de la clave** |`Edurun Code-Learning`| 
 | **Redireccionar URI** | `https://edurunapp.cl/tool` | 
 | **Título** | `Edurun Code-Learning` |
