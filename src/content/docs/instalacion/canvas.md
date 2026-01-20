@@ -1,3 +1,9 @@
+---
+title: "Configuración en Canvas"
+description: "Guía paso a paso para integrar Edurun mediante LTI 1.3 en Canvas LMS."
+---
+
+
 # Guía de Instalación de Edurun en Canvas
 
 Esta guía detalla el proceso técnico para instalar e integrar la herramienta Edurun (Edurunapp) en una instancia de Canvas LMS.
