@@ -1,0 +1,285 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Contáctanos - Edurun">
+  <Navbar />
+  
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Header Section -->
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 bg-edurun-blue/10 border border-edurun-blue/20 rounded-full px-4 py-1.5 mb-6">
+          <span class="flex h-2 w-2 rounded-full bg-edurun-blue"></span>
+          <span class="text-sm font-medium text-edurun-blue tracking-wide">Estamos aquí para ayudarte</span>
+        </div>
+        
+        <h1 class="text-5xl md:text-6xl font-extrabold text-edurun-dark tracking-tight mb-6">
+          ¿Listo para <span class="text-transparent bg-clip-text bg-gradient-to-r from-edurun-blue to-edurun-purple">transformar</span> tus evaluaciones?
+        </h1>
+        
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Cuéntanos sobre tu institución y descubre cómo Edurun puede ayudarte a mantener la integridad académica en tus cursos de programación.
+        </p>
+      </div>
+
+      <!-- Main Content Grid -->
+      <div class="grid md:grid-cols-2 gap-8 items-start">
+        
+        <!-- Contact Form -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 md:p-10">
+          <h2 class="text-2xl font-bold text-edurun-dark mb-6">Envíanos un mensaje</h2>
+          
+          <form id="contact-form" class="space-y-6">
+            <!-- Name -->
+            <div>
+              <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
+                Nombre completo <span class="text-red-500">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                required
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all"
+                placeholder="Juan Pérez"
+              />
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
+                Email institucional <span class="text-red-500">*</span>
+              </label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                required
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all"
+                placeholder="juan.perez@universidad.edu"
+              />
+            </div>
+
+            <!-- Institution -->
+            <div>
+              <label for="institution" class="block text-sm font-semibold text-gray-700 mb-2">
+                Institución <span class="text-red-500">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="institution" 
+                name="institution" 
+                required
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all"
+                placeholder="Universidad de Chile"
+              />
+            </div>
+
+            <!-- Role -->
+            <div>
+              <label for="role" class="block text-sm font-semibold text-gray-700 mb-2">
+                Cargo <span class="text-red-500">*</span>
+              </label>
+              <select 
+                id="role" 
+                name="role" 
+                required
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all bg-white"
+              >
+                <option value="">Selecciona tu cargo</option>
+                <option value="profesor">Profesor/Docente</option>
+                <option value="coordinador">Coordinador Académico</option>
+                <option value="director">Director de Departamento</option>
+                <option value="ti">Responsable de TI</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+
+            <!-- Subject -->
+            <div>
+              <label for="subject" class="block text-sm font-semibold text-gray-700 mb-2">
+                Asunto <span class="text-red-500">*</span>
+              </label>
+              <select 
+                id="subject" 
+                name="subject" 
+                required
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all bg-white"
+              >
+                <option value="">Selecciona un asunto</option>
+                <option value="demo">Solicitar demo</option>
+                <option value="pricing">Consultar precios</option>
+                <option value="integration">Integración con LMS</option>
+                <option value="support">Soporte técnico</option>
+                <option value="other">Otro</option>
+              </select>
+            </div>
+
+            <!-- Message -->
+            <div>
+              <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">
+                Mensaje <span class="text-red-500">*</span>
+              </label>
+              <textarea 
+                id="message" 
+                name="message" 
+                rows="5" 
+                required
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all resize-none"
+                placeholder="Cuéntanos más sobre tus necesidades..."
+              ></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit"
+              class="w-full bg-gradient-to-r from-edurun-blue to-edurun-purple text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
+            >
+              <span>Enviar mensaje</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </button>
+          </form>
+
+          <!-- Success Message (Hidden by default) -->
+          <div id="success-message" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+            <div class="flex items-center gap-3">
+              <svg class="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <div>
+                <p class="font-semibold text-green-900">¡Mensaje enviado con éxito!</p>
+                <p class="text-sm text-green-700">Nos pondremos en contacto contigo pronto.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Error Message (Hidden by default) -->
+          <div id="error-message" class="hidden mt-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <div class="flex items-center gap-3">
+              <svg class="w-6 h-6 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+              <div>
+                <p class="font-semibold text-red-900">Error al enviar el mensaje</p>
+                <p class="text-sm text-red-700">Por favor, intenta nuevamente o contáctanos directamente por email.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Information & Features -->
+        <div class="space-y-6">
+          
+          <!-- Quick Contact Cards -->
+          <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+            <h3 class="text-xl font-bold text-edurun-dark mb-6">Otras formas de contacto</h3>
+            
+            <div class="space-y-4">
+              <!-- Email -->
+              <a href="mailto:contacto@edurun.cl" class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors group">
+                <div class="bg-gradient-to-br from-edurun-blue/10 to-edurun-purple/10 p-3 rounded-xl group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 text-edurun-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">Email</p>
+                  <p class="text-sm text-edurun-blue">contacto@edurun.cl</p>
+                </div>
+              </a>
+
+              <!-- Documentation -->
+              <a href="/docs/guia-docente" class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors group">
+                <div class="bg-gradient-to-br from-edurun-blue/10 to-edurun-purple/10 p-3 rounded-xl group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 text-edurun-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">Documentación</p>
+                  <p class="text-sm text-gray-600">Explora nuestras guías y recursos</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Why Choose Edurun -->
+          <div class="bg-gradient-to-br from-edurun-blue/5 to-edurun-purple/5 rounded-2xl border border-edurun-blue/20 p-8">
+            <h3 class="text-xl font-bold text-edurun-dark mb-4">¿Por qué elegir Edurun?</h3>
+            <ul class="space-y-3">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Integración nativa con Canvas LTI 1.3</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Trazabilidad completa de acciones del estudiante</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Entorno de ejecución aislado y seguro</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Soporte técnico especializado en español</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const successMessage = document.getElementById('success-message');
+    const errorMessage = document.getElementById('error-message');
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Hide any previous messages
+      successMessage?.classList.add('hidden');
+      errorMessage?.classList.add('hidden');
+
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        // Here you would send the data to your backend
+        console.log('Form data:', data);
+        
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Show success message
+        successMessage?.classList.remove('hidden');
+        form.reset();
+        
+        // Scroll to success message
+        successMessage?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+      } catch (error) {
+        console.error('Error sending form:', error);
+        errorMessage?.classList.remove('hidden');
+        errorMessage?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  </script>
+
+  <Footer />
+</Layout>

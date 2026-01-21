@@ -49,25 +49,57 @@ const nextDoc = flatDocs[currentIndex + 1];
 ---
 
 <!doctype html>
-<html lang="es" class="scroll-smooth">
+<html lang="es" class="scroll-smooth" transition:persist data-astro-transition="none">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/webp" href="/logo.webp" />
     <title>{title} | Documentación Edurun</title>
     <ClientRouter />
+    
+    <!-- Disable view transitions for docs -->
+    <meta name="astro-view-transitions-enabled" content="false" />
+    <meta name="astro-view-transitions-fallback" content="none" />
 
+    <!-- CRITICAL: Apply theme BEFORE any rendering -->
     <script is:inline>
-      const applyTheme = () => {
-        const theme = typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : 'light';
-        if (theme === 'dark') document.documentElement.classList.add('dark');
-        else document.documentElement.classList.remove('dark');
-      };
-      applyTheme();
-      document.addEventListener('astro:after-swap', applyTheme);
+      (function() {
+        const theme = localStorage.getItem('theme') || 'light';
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      })();
     </script>
 
     <style is:global>
+        /* CRITICAL: Prevent white flash with immediate background */
+        html {
+            background-color: white !important;
+        }
+        
+        html.dark {
+            background-color: #1e1e20 !important;
+        }
+        
+        body {
+            background-color: transparent !important;
+        }
+        
+        /* Force instant view transitions without animation */
+        ::view-transition-group(root) {
+            animation-duration: 0s !important;
+        }
+        
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation: none !important;
+            mix-blend-mode: normal !important;
+        }
+        
+        ::view-transition-image-pair(root) {
+            isolation: auto !important;
+        }
+        
         /* Ocultar UI de Google Translate completamente */
         .goog-te-banner-frame { display: none !important; }
         body { top: 0px !important; }
@@ -77,16 +109,16 @@ const nextDoc = flatDocs[currentIndex + 1];
     </style>
   </head>
   
-  <body class="bg-white dark:bg-[#1e1e20] text-gray-800 dark:text-gray-200 min-h-screen transition-colors duration-300 antialiased">
+  <body class="bg-white dark:bg-[#1e1e20] text-gray-800 dark:text-gray-200 min-h-screen antialiased">
     
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#1e1e20]/95 border-b border-gray-200 dark:border-gray-700 backdrop-blur-md h-16 transition-colors duration-300">
+    <header transition:persist="header" transition:name="header" class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#1e1e20]/95 border-b border-gray-200 dark:border-gray-700 backdrop-blur-md h-16">
       <div class="h-full px-4 md:px-6 flex items-center justify-between">
         
         <div class="flex items-center gap-4">
             <button id="menu-toggle" class="md:hidden text-gray-500 hover:text-edurun-blue focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
-            <a href="/" class="flex items-center gap-2 group">
+            <a href="/" data-astro-reload class="flex items-center gap-2 group">
                 <img src="/logo.webp" class="w-8 h-8 group-hover:scale-110 transition-transform" alt="Logo">
                 <span class="font-bold text-xl text-gray-900 dark:text-white tracking-tight">Edurun<span class="text-edurun-blue">Docs</span></span>
             </a>
@@ -117,7 +149,7 @@ const nextDoc = flatDocs[currentIndex + 1];
     </header>
 
     <div class="flex pt-16 min-h-screen">
-        <aside id="sidebar-left" class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-4rem)] transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out bg-gray-50 dark:bg-[#18181a] border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
+        <aside transition:persist="sidebar-left" transition:name="sidebar-left" id="sidebar-left" class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-4rem)] transform -translate-x-full md:translate-x-0 bg-gray-50 dark:bg-[#18181a] border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
             <div class="p-6">
                 <nav class="space-y-2">
                     {sortOrder.map((key) => {
@@ -141,7 +173,7 @@ const nextDoc = flatDocs[currentIndex + 1];
                                     </summary>
                                     <div class="mt-1 ml-4 border-l-2 border-gray-200 dark:border-gray-700 pl-2 space-y-1">
                                         {entry.items.map(doc => (
-                                            <a href={`/docs/${doc.slug}`} class={`block px-3 py-1.5 rounded-md text-sm transition-colors ${Astro.url.pathname.includes(doc.slug) ? 'text-edurun-blue font-semibold bg-blue-50/50 dark:bg-blue-900/10' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
+                                            <a href={`/docs/${doc.slug}`} class={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${Astro.url.pathname.includes(doc.slug) ? 'bg-blue-50 dark:bg-blue-900/20 text-edurun-blue' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
                                                 {doc.data.title}
                                             </a>
                                         ))}
@@ -186,7 +218,7 @@ const nextDoc = flatDocs[currentIndex + 1];
             </div>
         </main>
 
-        <aside class="hidden xl:block fixed top-16 right-0 w-64 h-[calc(100vh-4rem)] bg-white dark:bg-[#1e1e20] border-l border-gray-200 dark:border-gray-700 overflow-y-auto transition-all duration-300 ease-in-out">
+        <aside transition:persist="sidebar-right" transition:name="sidebar-right" class="hidden xl:block fixed top-16 right-0 w-64 h-[calc(100vh-4rem)] bg-white dark:bg-[#1e1e20] border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
             <div class="p-8">
                 <h5 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4">En esta página</h5>
                 <ul class="space-y-3 text-sm border-l-2 border-gray-100 dark:border-gray-800">
@@ -205,6 +237,48 @@ const nextDoc = flatDocs[currentIndex + 1];
     <div id="google_translate_element"></div>
 
     <script is:inline>
+        // Reapply theme on every navigation
+        function applyTheme() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        // Apply on page swap
+        document.addEventListener('astro:after-swap', applyTheme);
+        document.addEventListener('astro:page-load', applyTheme);
+        
+        // Update active sidebar item on navigation
+        function updateActiveNav() {
+            const currentPath = window.location.pathname;
+            
+            // Remove all active states
+            document.querySelectorAll('#sidebar-left a').forEach(link => {
+                link.classList.remove('bg-blue-50', 'dark:bg-blue-900/20', 'text-edurun-blue', 'font-medium');
+                if (!link.classList.contains('hover:bg-gray-100')) {
+                    link.classList.add('text-gray-600', 'dark:text-gray-400');
+                } else {
+                    link.classList.add('text-gray-500', 'dark:text-gray-400');
+                }
+            });
+            
+            // Add active state to current page
+            document.querySelectorAll('#sidebar-left a').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && currentPath.includes(href.replace('/docs/', ''))) {
+                    link.classList.remove('text-gray-600', 'dark:text-gray-400', 'text-gray-500');
+                    link.classList.add('bg-blue-50', 'dark:bg-blue-900/20', 'text-edurun-blue', 'font-medium');
+                }
+            });
+        }
+        
+        // Run on page load and navigation
+        document.addEventListener('astro:page-load', updateActiveNav);
+        document.addEventListener('astro:after-swap', updateActiveNav);
+    
         window['googleTranslateElementInit'] = function() {
             new google.translate.TranslateElement({ pageLanguage: 'es', includedLanguages: 'en,pt,es', autoDisplay: false }, 'google_translate_element');
         }
