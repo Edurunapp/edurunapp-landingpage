@@ -16,8 +16,8 @@ Esta guía detalla cómo instalar la herramienta Edurun en Moodle utilizando el 
 ## Paso 1: Acceder a la Gestión de Herramientas
 
 1. Inicie sesión como administrador en Moodle.
-2. Vaya a **Administración del sitio** > **Extensiones (Plugins)** > **Herramientas externas (External Tool)** > **Gestionar herramientas**.
-
+2. Vaya a **Administración del sitio** > **Extensiones (Plugins)** > **Herramientas externas (External Tool)** > **Administrar herramientas**.
+![Imagen de referencia 1](https://edurun.exposmart.cl/wp-content/uploads/2026/01/administrar-herramientas.png)
 ## Paso 2: Registro Dinámico (Método Automático)
 
 Este es el método más rápido, ya que Moodle y Edurun intercambiarán automáticamente las claves de seguridad y los endpoints.
@@ -26,7 +26,9 @@ Este es el método más rápido, ya que Moodle y Edurun intercambiarán automát
    
    Ejemplo: `https://aplicación.com/register`
 
-2. Haga clic en el botón **Añadir LTI de forma dinámica**.
+2. Haga clic en el botón **Añadir LTI Advantage**.
+
+![Imagen de referencia 2](https://edurun.exposmart.cl/wp-content/uploads/2026/01/anadir-url-1.png)
 
 3. Se abrirá una ventana emergente de la herramienta Edurun confirmando la conexión. Haga clic en **Continuar/Confirmar**.
 
@@ -38,39 +40,50 @@ Una vez agregada, la herramienta aparecerá en la lista de herramientas gestiona
 
 **Habilitar:** Verifique que el estado de la herramienta esté marcado como "Activo".
 
-**Ajustes de Privacidad:** Haga clic en el icono de engranaje (Configuración) de la herramienta recién creada y asegúrese de que las siguientes opciones estén en "Siempre":
+![Imagen de referencia 3](https://edurun.exposmart.cl/wp-content/uploads/2026/01/activar-herramienta.png)
 
-- Compartir el nombre del lanzador con la herramienta.
-- Compartir el correo electrónico del lanzador con la herramienta.
-- Aceptar calificaciones de la herramienta.
+**Ajustes de Privacidad:** Haga clic en el icono del lápiz (Configuración) de la herramienta recién creada y asegúrese de que las siguientes opciones estén como en la captura de pantalla:
 
-## Paso 4: Registro en LTIjs (Para el Desarrollador)
+- Servicios de calificación y asignación de IMS LTI
+- Aprovisionamiento de roles y nombres de IMS LTI
+- Ajustes de la herramienta
+- Compartir el nombre del usuario con la herramienta
+- Aceptar calificaciones desde la herramienta
+- Forzar SSL
 
-Si el registro dinámico no registra automáticamente la plataforma en su servidor, el desarrollador debe añadir manualmente la instancia de Moodle en el archivo index.js de LTIjs:
+![Imagen de referencia 4](https://edurun.exposmart.cl/wp-content/uploads/2026/01/ajustes-1.png)
 
-```javascript
-await lti.registerPlatform({
-  url: 'https://tu-moodle.com', // URL base de su Moodle
-  name: 'Moodle_Produccion', // Nombre a elección
-  // Las siguientes variables se encuentran en "Detalles de configuración" de la herramienta en Moodle
-  clientId: 'VALOR_GENERADO_POR_MOODLE',
-  authenticationEndpoint: 'https://tu-moodle.com/mod/lti/auth.php',
-  accesstokenEndpoint: 'https://tu-moodle.com/mod/lti/token.php',
-  authConfig: { 
-      method: 'JWK_SET', 
-      key: 'https://tu-moodle.com/mod/lti/certs.php' 
-  }
-})
-```
+> **Nota para Desarrolladores:** Si el registro dinámico no registra automáticamente la plataforma en su servidor, comuníquese con el desarrollador o contáctenos a contacto@edurunapp.cl
 
-## Paso 5: Agregar la Herramienta a un Curso
+## Paso 4: Habilitar la Herramienta en el Curso
+
+Antes de poder agregar actividades de Edurun, primero **debe activar la herramienta en el curso**.
 
 1. Diríjase al curso donde desea utilizar Edurun.
-2. Active el **Modo de edición**.
-3. Haga clic en **Añadir una actividad o recurso**.
-4. Seleccione **Herramienta externa**.
-5. En **Herramienta preconfigurada**, seleccione **Edurun** del menú desplegable.
-6. Haga clic en **Guardar cambios y mostrar**.
+
+2. Vaya a **Más** > **Herramientas Externas LTI**.
+
+![Imagen de referencia 7](https://edurun.exposmart.cl/wp-content/uploads/2026/01/habilitar-herramienta.png)
+
+3. Habilite la herramienta Edurun.
+
+![Imagen de referencia 8](https://edurun.exposmart.cl/wp-content/uploads/2026/01/habilitar.png)
+
+## Paso 5: Agregar una Actividad de Edurun
+
+1. Active el **Modo de edición** del curso.
+
+2. Haga clic en **Añadir una actividad o recurso**.
+
+![Imagen de referencia 5](https://edurun.exposmart.cl/wp-content/uploads/2026/01/actividad-o-recurso.png)
+
+3. Seleccione **Herramienta externa**.
+
+4. En **Herramienta preconfigurada**, seleccione **Edurun** del menú desplegable.
+
+![Imagen de referencia 6](https://edurun.exposmart.cl/wp-content/uploads/2026/01/actividad-edurun.png)
+
+5. Haga clic en **Guardar cambios y mostrar**.
 
 ---
 
