@@ -4,9 +4,9 @@ const currentYear = new Date().getFullYear();
 
 <footer class="bg-gray-50 border-t border-gray-100 pt-16 pb-8">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid md:grid-cols-4 gap-8 mb-12">
+    <div class="grid md:grid-cols-2 gap-12 mb-12">
       
-      <div class="col-span-1 md:col-span-2">
+      <div>
         <div class="flex items-center gap-2 mb-4">
           <img src="/logo.png" alt="Edurun Logo" class="h-8 w-auto grayscale opacity-50" />
           <span class="text-xl font-bold text-gray-900">Edurun</span>
@@ -14,25 +14,25 @@ const currentYear = new Date().getFullYear();
         <p class="text-gray-500 max-w-sm mb-6">
           Plataforma de evaluación para Python con enfoque en integridad académica, trazabilidad y aprendizaje profundo.
         </p>
-        <div class="flex gap-4">
-          </div>
       </div>
 
-      <div>
-        <h3 class="font-semibold text-gray-900 mb-4">Producto</h3>
-        <ul class="space-y-3 text-sm text-gray-600">
-          <li><a href="#funcionalidades" class="hover:text-edurun-blue transition">Funcionalidades</a></li>
-          <li><a href="#integridad" class="hover:text-edurun-blue transition">Integridad Académica</a></li>
-          <li><a href="/docs/arquitectura" class="hover:text-edurun-blue transition">Arquitectura</a></li>
-        </ul>
-      </div>
+      <div class="grid grid-cols-2 gap-8">
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-4">Contacto</h3>
+          <ul class="space-y-3 text-sm text-gray-600">
+            <li>
+              <a href="/contacto" class="hover:text-edurun-blue transition">Formulario de contacto</a>
+            </li>
+          </ul>
+        </div>
 
-      <div>
-        <h3 class="font-semibold text-gray-900 mb-4">Recursos</h3>
-        <ul class="space-y-3 text-sm text-gray-600">
-          <li><a href="/docs/guia-docente" class="hover:text-edurun-blue transition">Documentación</a></li>
-          <li><a href="https://github.com/Edurunapp/edurunapp-landingpage" target="_blank" class="hover:text-edurun-blue transition">GitHub Repo</a></li>
-        </ul>
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-4">Recursos</h3>
+          <ul class="space-y-3 text-sm text-gray-600">
+            <li><a href="/docs/guia-docente" class="hover:text-edurun-blue transition">Documentación</a></li>
+            <li><a href="https://github.com/Edurunapp" target="_blank" class="hover:text-edurun-blue transition">GitHub</a></li>
+          </ul>
+        </div>
       </div>
 
     </div>

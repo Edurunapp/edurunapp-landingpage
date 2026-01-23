@@ -2,6 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+
+// EmailJS configuration from environment variables
+const EMAILJS_SERVICE_ID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY;
 ---
 
 <Layout title="Contáctanos - Edurun">
@@ -112,7 +117,6 @@ import Footer from '../components/Footer.astro';
               >
                 <option value="">Selecciona un asunto</option>
                 <option value="demo">Solicitar demo</option>
-                <option value="pricing">Consultar precios</option>
                 <option value="integration">Integración con LMS</option>
                 <option value="support">Soporte técnico</option>
                 <option value="other">Otro</option>
@@ -182,7 +186,7 @@ import Footer from '../components/Footer.astro';
             
             <div class="space-y-4">
               <!-- Email -->
-              <a href="mailto:contacto@edurun.cl" class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors group">
+              <a href="mailto:b.nezlara@uandresbello.edu" class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors group">
                 <div class="bg-gradient-to-br from-edurun-blue/10 to-edurun-purple/10 p-3 rounded-xl group-hover:scale-110 transition-transform">
                   <svg class="w-6 h-6 text-edurun-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
@@ -190,7 +194,7 @@ import Footer from '../components/Footer.astro';
                 </div>
                 <div>
                   <p class="font-semibold text-gray-900">Email</p>
-                  <p class="text-sm text-edurun-blue">contacto@edurun.cl</p>
+                  <p class="text-sm text-edurun-blue">b.nezlara@uandresbello.edu</p>
                 </div>
               </a>
 
@@ -244,10 +248,17 @@ import Footer from '../components/Footer.astro';
     </div>
   </div>
 
-  <script>
-    const form = document.getElementById('contact-form') as HTMLFormElement;
+  <script define:vars={{ EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY }}>
+    // Initialize EmailJS
+    (function() {
+      // @ts-ignore
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+    })();
+
+    const form = document.getElementById('contact-form');
     const successMessage = document.getElementById('success-message');
     const errorMessage = document.getElementById('error-message');
+    const submitButton = form?.querySelector('button[type="submit"]');
 
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -256,15 +267,22 @@ import Footer from '../components/Footer.astro';
       successMessage?.classList.add('hidden');
       errorMessage?.classList.add('hidden');
 
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
+      // Disable button and show loading state
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span>Enviando...</span>';
+      }
 
       try {
-        // Here you would send the data to your backend
-        console.log('Form data:', data);
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Send email using EmailJS
+        // @ts-ignore
+        const response = await emailjs.sendForm(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          form
+        );
+
+        console.log('Email sent successfully:', response);
         
         // Show success message
         successMessage?.classList.remove('hidden');
@@ -274,9 +292,20 @@ import Footer from '../components/Footer.astro';
         successMessage?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         
       } catch (error) {
-        console.error('Error sending form:', error);
+        console.error('Error sending email:', error);
         errorMessage?.classList.remove('hidden');
         errorMessage?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } finally {
+        // Re-enable button
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.innerHTML = `
+            <span>Enviar mensaje</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          `;
+        }
       }
     });
   </script>
