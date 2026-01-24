@@ -1,0 +1,161 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout 
+  title="Política de Privacidad | Edurun"
+  description="Conoce cómo Edurun protege y gestiona tus datos personales. Transparencia total sobre recopilación, uso y protección de información."
+>
+  <Navbar />
+  
+  <div class="min-h-screen bg-gray-50 py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Header -->
+      <div class="mb-12">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-edurun-dark mb-4">
+          Política de Privacidad
+        </h1>
+        <p class="text-gray-600">
+          Última actualización: 24 de enero de 2026
+        </p>
+      </div>
+
+      <!-- Content -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 md:p-12 prose prose-lg prose-slate max-w-none">
+        
+        <h2>1. Introducción</h2>
+        <p>
+          En Edurun ("nosotros", "nuestro" o "la plataforma"), nos comprometemos a proteger tu privacidad y tus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos, compartimos y protegemos tu información cuando utilizas nuestra plataforma de evaluación académica.
+        </p>
+
+        <h2>2. Información que Recopilamos</h2>
+        
+        <h3>2.1. Información proporcionada directamente</h3>
+        <ul>
+          <li><strong>Datos de registro:</strong> nombre, correo electrónico, institución educativa y rol (estudiante/profesor).</li>
+          <li><strong>Datos de integración LTI:</strong> información proporcionada automáticamente por Canvas LMS al iniciar sesión (ID de usuario, cursos, roles).</li>
+          <li><strong>Contenido generado:</strong> código fuente, respuestas a evaluaciones, comentarios y retroalimentación.</li>
+        </ul>
+
+        <h3>2.2. Información recopilada automáticamente</h3>
+        <ul>
+          <li><strong>Datos de trazabilidad académica:</strong> historial de ejecuciones de código, tiempos de actividad, cambios de ventana, intentos de copiar/pegar.</li>
+          <li><strong>Datos técnicos:</strong> dirección IP, tipo de navegador, sistema operativo, timestamps de acceso.</li>
+          <li><strong>Cookies y tecnologías similares:</strong> para mantener sesiones activas y preferencias de usuario.</li>
+        </ul>
+
+        <h2>3. Cómo Usamos tu Información</h2>
+        <p>Utilizamos tus datos para:</p>
+        <ul>
+          <li>Proporcionar y mejorar los servicios de evaluación académica.</li>
+          <li>Generar reportes de integridad académica para profesores.</li>
+          <li>Sincronizar calificaciones con tu LMS (Canvas).</li>
+          <li>Prevenir fraude y garantizar la seguridad de la plataforma.</li>
+          <li>Cumplir con obligaciones legales y regulatorias.</li>
+          <li>Comunicar actualizaciones importantes del servicio.</li>
+        </ul>
+
+        <h2>4. Base Legal para el Procesamiento (GDPR)</h2>
+        <p>Procesamos tus datos personales bajo las siguientes bases legales:</p>
+        <ul>
+          <li><strong>Consentimiento:</strong> al crear una cuenta y usar la plataforma.</li>
+          <li><strong>Ejecución de contrato:</strong> para proporcionar los servicios contratados por tu institución.</li>
+          <li><strong>Interés legítimo:</strong> para mejorar la seguridad y funcionalidad de la plataforma.</li>
+          <li><strong>Obligación legal:</strong> cuando la ley requiera retención de datos educativos.</li>
+        </ul>
+
+        <h2>5. Compartir Información</h2>
+        <p><strong>No vendemos tus datos personales.</strong> Compartimos información solo en los siguientes casos:</p>
+        <ul>
+          <li><strong>Con tu institución educativa:</strong> profesores y administradores autorizados pueden acceder a tus evaluaciones y métricas de integridad.</li>
+          <li><strong>Proveedores de servicios:</strong> servicios de hosting (AWS/GCP), procesamiento de pagos, y analytics (encriptados y anonimizados).</li>
+          <li><strong>Requerimientos legales:</strong> cuando la ley lo exija (órdenes judiciales, investigaciones).</li>
+        </ul>
+
+        <h2>6. Seguridad de los Datos</h2>
+        <p>Implementamos medidas de seguridad técnicas y organizativas:</p>
+        <ul>
+          <li>Encriptación de datos en tránsito (TLS 1.3) y en reposo (AES-256).</li>
+          <li>Autenticación mediante LTI 1.3 con tokens OAuth 2.0.</li>
+          <li>Contenedores Docker aislados para ejecución de código.</li>
+          <li>Auditorías de seguridad regulares y pruebas de penetración.</li>
+          <li>Acceso restringido mediante control de roles (RBAC).</li>
+        </ul>
+
+        <h2>7. Retención de Datos</h2>
+        <ul>
+          <li><strong>Datos de evaluación:</strong> se conservan durante la duración del curso + 2 años para fines académicos.</li>
+          <li><strong>Datos de trazabilidad:</strong> se eliminan automáticamente después de 1 año.</li>
+          <li><strong>Cuentas inactivas:</strong> se anonimiza la información después de 3 años de inactividad.</li>
+        </ul>
+
+        <h2>8. Tus Derechos</h2>
+        <p>Bajo GDPR, CCPA y leyes de protección de datos chilenas, tienes derecho a:</p>
+        <ul>
+          <li><strong>Acceso:</strong> solicitar una copia de tus datos personales.</li>
+          <li><strong>Rectificación:</strong> corregir información inexacta.</li>
+          <li><strong>Eliminación:</strong> solicitar la eliminación de tus datos ("derecho al olvido").</li>
+          <li><strong>Portabilidad:</strong> recibir tus datos en formato estructurado.</li>
+          <li><strong>Oposición:</strong> objetar el procesamiento de tus datos para ciertos fines.</li>
+          <li><strong>Limitación:</strong> restringir el procesamiento en ciertos casos.</li>
+        </ul>
+        <p>Para ejercer estos derechos, contáctanos en <a href="mailto:privacidad@edurun.cl">privacidad@edurun.cl</a>.</p>
+
+        <h2>9. Cookies y Tecnologías de Rastreo</h2>
+        <p>Usamos cookies estrictamente necesarias para:</p>
+        <ul>
+          <li>Mantener tu sesión activa.</li>
+          <li>Recordar preferencias de idioma y tema.</li>
+          <li>Autenticación mediante LTI.</li>
+        </ul>
+        <p>No utilizamos cookies de terceros para publicidad o rastreo.</p>
+
+        <h2>10. Menores de Edad</h2>
+        <p>
+          Edurun está diseñado para uso educativo y puede ser utilizado por estudiantes menores de 18 años bajo supervisión institucional. Cumplimos con COPPA (EE.UU.) y normativas equivalentes. Los menores deben contar con consentimiento de su institución educativa.
+        </p>
+
+        <h2>11. Transferencias Internacionales</h2>
+        <p>
+          Tus datos pueden ser procesados en servidores ubicados en EE.UU. o Europa (AWS/GCP). Garantizamos protección mediante cláusulas contractuales estándar aprobadas por la UE.
+        </p>
+
+        <h2>12. Cambios a esta Política</h2>
+        <p>
+          Podemos actualizar esta política ocasionalmente. Te notificaremos cambios significativos por correo electrónico o mediante aviso en la plataforma. La fecha de "última actualización" se modificará en consecuencia.
+        </p>
+
+        <h2>13. Contacto</h2>
+        <p>Para preguntas sobre esta política, contáctanos:</p>
+        <ul>
+          <li><strong>Email:</strong> <a href="mailto:privacidad@edurun.cl">privacidad@edurun.cl</a></li>
+          <li><strong>Web:</strong> <a href="/contacto">Formulario de contacto</a></li>
+          <li><strong>Delegado de Protección de Datos (DPO):</strong> dpo@edurun.cl</li>
+        </ul>
+
+        <div class="mt-12 p-6 bg-blue-50 border border-blue-200 rounded-xl">
+          <p class="text-sm text-gray-700 mb-0">
+            <strong>Nota:</strong> Esta política cumple con GDPR (UE), CCPA (California), PIPEDA (Canadá) y la Ley N° 19.628 de Protección de Datos Personales de Chile.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Back to home -->
+      <div class="mt-12 text-center">
+        <a href="/" class="inline-flex items-center gap-2 text-edurun-blue hover:text-edurun-purple font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          Volver al inicio
+        </a>
+      </div>
+
+    </div>
+  </div>
+  
+  <Footer />
+</Layout>

@@ -1,0 +1,214 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout 
+  title="Términos y Condiciones | Edurun"
+  description="Términos de uso, condiciones del servicio y acuerdos legales para el uso de la plataforma Edurun."
+>
+  <Navbar />
+  
+  <div class="min-h-screen bg-gray-50 py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Header -->
+      <div class="mb-12">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-edurun-dark mb-4">
+          Términos y Condiciones
+        </h1>
+        <p class="text-gray-600">
+          Última actualización: 24 de enero de 2026
+        </p>
+      </div>
+
+      <!-- Content -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 md:p-12 prose prose-lg prose-slate max-w-none">
+        
+        <h2>1. Aceptación de los Términos</h2>
+        <p>
+          Al acceder y utilizar Edurun ("la plataforma", "el servicio"), aceptas estar sujeto a estos Términos y Condiciones, nuestra <a href="/privacidad">Política de Privacidad</a>, y todas las leyes aplicables. Si no estás de acuerdo con alguno de estos términos, no debes usar este servicio.
+        </p>
+
+        <h2>2. Descripción del Servicio</h2>
+        <p>
+          Edurun es una plataforma de evaluación académica de código Python que:
+        </p>
+        <ul>
+          <li>Se integra con sistemas LMS (Learning Management Systems) mediante LTI 1.3.</li>
+          <li>Permite a profesores crear y gestionar evaluaciones de programación.</li>
+          <li>Proporciona a estudiantes un entorno seguro para resolver ejercicios de código.</li>
+          <li>Genera reportes de trazabilidad académica para garantizar integridad.</li>
+          <li>Ejecuta código en contenedores Docker aislados y efímeros.</li>
+        </ul>
+
+        <h2>3. Elegibilidad y Cuenta de Usuario</h2>
+        
+        <h3>3.1. Requisitos</h3>
+        <ul>
+          <li>Debes ser mayor de 18 años o tener permiso de tu institución educativa.</li>
+          <li>Los estudiantes menores acceden mediante integración LTI institucional.</li>
+          <li>Debes proporcionar información precisa y mantenerla actualizada.</li>
+        </ul>
+
+        <h3>3.2. Responsabilidad de la cuenta</h3>
+        <ul>
+          <li>Eres responsable de mantener la confidencialidad de tus credenciales.</li>
+          <li>Notifica inmediatamente cualquier uso no autorizado.</li>
+          <li>No puedes compartir tu cuenta con terceros.</li>
+        </ul>
+
+        <h2>4. Uso Aceptable</h2>
+        
+        <h3>4.1. Está permitido:</h3>
+        <ul>
+          <li>Usar la plataforma para fines educativos legítimos.</li>
+          <li>Escribir y ejecutar código Python en el entorno proporcionado.</li>
+          <li>Acceder a tus propias evaluaciones y calificaciones.</li>
+          <li>Profesores: crear, modificar y calificar evaluaciones de sus cursos.</li>
+        </ul>
+
+        <h3>4.2. Está prohibido:</h3>
+        <ul>
+          <li><strong>Violación de integridad académica:</strong> plagio, suplantación, compartir soluciones.</li>
+          <li><strong>Intentos de evasión:</strong> manipular sistemas de detección, usar herramientas para burlar controles.</li>
+          <li><strong>Abuso técnico:</strong> intentar acceder a cuentas de otros, ataques DDoS, explotación de vulnerabilidades.</li>
+          <li><strong>Código malicioso:</strong> subir malware, virus, scripts destructivos.</li>
+          <li><strong>Uso no autorizado:</strong> revender acceso, uso comercial sin licencia institucional.</li>
+        </ul>
+
+        <h2>5. Integridad Académica</h2>
+        <p>
+          Edurun está diseñado para promover la integridad académica. El uso de IA generativa (ChatGPT, GitHub Copilot, etc.) puede ser detectado mediante trazabilidad de proceso. Tu institución educativa define las políticas específicas de integridad que debes seguir.
+        </p>
+        <p>
+          <strong>Advertencia:</strong> Violaciones repetidas pueden resultar en suspensión de cuenta y reporte a tu institución.
+        </p>
+
+        <h2>6. Ejecución de Código y Seguridad</h2>
+        <ul>
+          <li>El código se ejecuta en contenedores Docker aislados con límites de recursos (CPU, memoria, tiempo).</li>
+          <li>No se permite acceso a red, sistema de archivos del host, ni llamadas del sistema peligrosas.</li>
+          <li>Los contenedores se destruyen inmediatamente después de la ejecución.</li>
+          <li>No somos responsables por errores en tu código o pérdida de datos no guardados.</li>
+        </ul>
+
+        <h2>7. Propiedad Intelectual</h2>
+        
+        <h3>7.1. Contenido de Edurun</h3>
+        <p>
+          Todo el contenido, diseño, código fuente, interfaces y funcionalidad de la plataforma son propiedad de Edurun y están protegidos por derechos de autor, marcas registradas y otras leyes de propiedad intelectual.
+        </p>
+
+        <h3>7.2. Tu contenido</h3>
+        <ul>
+          <li>Retienes todos los derechos sobre el código que escribes.</li>
+          <li>Otorgas a Edurun una licencia para procesar, almacenar y mostrar tu código con fines educativos.</li>
+          <li>Profesores mantienen derechos sobre evaluaciones que crean.</li>
+          <li>Tu institución educativa tiene acceso a tu contenido según políticas institucionales.</li>
+        </ul>
+
+        <h2>8. Pago y Facturación (Instituciones)</h2>
+        <ul>
+          <li>Edurun opera bajo licencias institucionales.</li>
+          <li>Los precios se acuerdan mediante contrato con cada institución.</li>
+          <li>Los pagos se procesan de forma segura mediante proveedores certificados PCI-DSS.</li>
+          <li>Reembolsos están sujetos a términos contractuales específicos.</li>
+        </ul>
+
+        <h2>9. Disponibilidad del Servicio</h2>
+        <p>
+          Nos esforzamos por mantener una disponibilidad del 99.5%, pero no garantizamos que el servicio esté libre de interrupciones. Podemos:
+        </p>
+        <ul>
+          <li>Realizar mantenimiento programado con notificación previa.</li>
+          <li>Suspender temporalmente el servicio por emergencias técnicas.</li>
+          <li>Modificar funcionalidades para mejorar la plataforma.</li>
+        </ul>
+
+        <h2>10. Limitación de Responsabilidad</h2>
+        <p>
+          En la máxima medida permitida por la ley:
+        </p>
+        <ul>
+          <li>Edurun no es responsable por pérdida de datos, calificaciones incorrectas o fallos técnicos.</li>
+          <li>No garantizamos que la plataforma sea 100% segura o libre de errores.</li>
+          <li>No somos responsables por decisiones académicas tomadas por tu institución basadas en reportes de Edurun.</li>
+          <li>Nuestra responsabilidad total no excederá el monto pagado por tu institución en los últimos 12 meses.</li>
+        </ul>
+
+        <h2>11. Indemnización</h2>
+        <p>
+          Aceptas indemnizar y eximir de responsabilidad a Edurun contra reclamos derivados de:
+        </p>
+        <ul>
+          <li>Tu violación de estos términos.</li>
+          <li>Tu infracción de derechos de terceros.</li>
+          <li>Uso no autorizado de tu cuenta.</li>
+        </ul>
+
+        <h2>12. Modificaciones del Servicio y Términos</h2>
+        <ul>
+          <li>Podemos modificar o descontinuar funcionalidades con 30 días de aviso.</li>
+          <li>Actualizaremos estos términos ocasionalmente; cambios materiales se notificarán por email.</li>
+          <li>El uso continuado después de cambios constituye aceptación.</li>
+        </ul>
+
+        <h2>13. Terminación</h2>
+        <p>
+          Podemos suspender o terminar tu acceso si:
+        </p>
+        <ul>
+          <li>Violas estos términos.</li>
+          <li>Tu institución cancela el contrato.</li>
+          <li>Detectamos actividad fraudulenta o maliciosa.</li>
+        </ul>
+        <p>
+          Puedes solicitar eliminación de tu cuenta en cualquier momento a través de <a href="mailto:soporte@edurun.cl">soporte@edurun.cl</a>.
+        </p>
+
+        <h2>14. Ley Aplicable y Jurisdicción</h2>
+        <p>
+          Estos términos se rigen por las leyes de Chile. Cualquier disputa será resuelta en los tribunales competentes de Santiago, Chile.
+        </p>
+
+        <h2>15. Disposiciones Generales</h2>
+        <ul>
+          <li><strong>Independencia:</strong> Si alguna cláusula es inválida, las demás permanecen vigentes.</li>
+          <li><strong>Renuncia:</strong> La falta de ejercicio de un derecho no constituye renuncia.</li>
+          <li><strong>Cesión:</strong> No puedes transferir estos términos sin nuestro consentimiento.</li>
+          <li><strong>Acuerdo completo:</strong> Estos términos constituyen el acuerdo completo entre las partes.</li>
+        </ul>
+
+        <h2>16. Contacto</h2>
+        <p>Para preguntas sobre estos términos:</p>
+        <ul>
+          <li><strong>Email:</strong> <a href="mailto:legal@edurun.cl">legal@edurun.cl</a></li>
+          <li><strong>Soporte:</strong> <a href="mailto:soporte@edurun.cl">soporte@edurun.cl</a></li>
+          <li><strong>Web:</strong> <a href="/contacto">Formulario de contacto</a></li>
+        </ul>
+
+        <div class="mt-12 p-6 bg-yellow-50 border border-yellow-200 rounded-xl">
+          <p class="text-sm text-gray-700 mb-0">
+            <strong>Importante:</strong> Al usar Edurun, confirmas que has leído, comprendido y aceptado estos Términos y Condiciones, así como nuestra <a href="/privacidad" class="text-edurun-blue hover:underline">Política de Privacidad</a>.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Back to home -->
+      <div class="mt-12 text-center">
+        <a href="/" class="inline-flex items-center gap-2 text-edurun-blue hover:text-edurun-purple font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          Volver al inicio
+        </a>
+      </div>
+
+    </div>
+  </div>
+  
+  <Footer />
+</Layout>

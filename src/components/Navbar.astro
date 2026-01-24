@@ -1,35 +1,107 @@
 ---
 // src/components/Navbar.astro
 ---
-<nav transition:persist="navbar" transition:name="navbar" class="bg-white border-b border-gray-100 sticky top-0 z-50">
+<nav transition:persist="navbar" transition:name="navbar" class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-white/95" role="navigation" aria-label="Navegación principal">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-20 items-center">
       
-      <a href="/" class="flex-shrink-0 flex items-center gap-2 cursor-pointer group">
-        <img class="h-10 w-auto group-hover:scale-110 transition-transform" src="/logo.png" alt="Logo Edurun" />
+      <a href="/" class="flex-shrink-0 flex items-center gap-2 cursor-pointer group" aria-label="Edurun - Ir a inicio">
+        <img class="h-10 w-auto group-hover:scale-110 transition-transform" src="/logo.png" alt="Logo de Edurun" loading="lazy" width="40" height="40" />
         <span class="text-2xl font-bold text-edurun-dark tracking-tight">Edurun</span>
       </a>
 
-      <div class="hidden md:flex space-x-8">
-        <a href="/#funcionalidades" class="text-gray-500 hover:text-edurun-blue font-medium transition-colors">
+      <div class="hidden md:flex space-x-8" role="menubar">
+        <a href="/#funcionalidades" class="text-gray-500 hover:text-edurun-blue font-medium transition-colors" role="menuitem">
           Funcionalidades
         </a>
-        <a href="/#integridad" class="text-gray-500 hover:text-edurun-blue font-medium transition-colors">
+        <a href="/#integridad" class="text-gray-500 hover:text-edurun-blue font-medium transition-colors" role="menuitem">
           Integridad
         </a>
-        <a href="/docs/arquitectura" data-astro-reload class="text-gray-500 hover:text-edurun-blue font-medium transition-colors">
+        <a href="/docs/arquitectura" data-astro-reload class="text-gray-500 hover:text-edurun-blue font-medium transition-colors" role="menuitem">
           Documentación
         </a>
       </div>
 
-      <div class="flex items-center">
+      <div class="hidden md:flex items-center">
         <a 
           href="/contacto" 
-          class="bg-gradient-to-r from-edurun-blue to-edurun-purple text-white px-5 py-2.5 rounded-lg font-semibold shadow-md hover:shadow-lg hover:opacity-90 transition-all transform hover:-translate-y-0.5">
+          class="bg-gradient-to-r from-edurun-blue to-edurun-purple text-white px-5 py-2.5 rounded-lg font-semibold shadow-md hover:shadow-lg hover:opacity-90 transition-all transform hover:-translate-y-0.5"
+          aria-label="Ir a página de contacto">
           Contáctanos
         </a>
       </div>
       
+      <!-- Mobile menu button -->
+      <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="mobile-menu">
+        <svg id="menu-open-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <svg id="menu-close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden pb-4">
+      <div class="flex flex-col space-y-3">
+        <a href="/#funcionalidades" class="text-gray-500 hover:text-edurun-blue font-medium transition-colors py-2">
+          Funcionalidades
+        </a>
+        <a href="/#integridad" class="text-gray-500 hover:text-edurun-blue font-medium transition-colors py-2">
+          Integridad
+        </a>
+        <a href="/docs/arquitectura" data-astro-reload class="text-gray-500 hover:text-edurun-blue font-medium transition-colors py-2">
+          Documentación
+        </a>
+        <a 
+          href="/contacto" 
+          class="bg-gradient-to-r from-edurun-blue to-edurun-purple text-white px-5 py-2.5 rounded-lg font-semibold shadow-md text-center mt-2">
+          Contáctanos
+        </a>
+      </div>
     </div>
   </div>
 </nav>
+
+<script>
+  function setupMobileMenu() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const openIcon = document.getElementById('menu-open-icon');
+    const closeIcon = document.getElementById('menu-close-icon');
+    
+    if (!btn || !menu || !openIcon || !closeIcon) return;
+    
+    // Remove existing listeners by cloning
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode?.replaceChild(newBtn, btn);
+    
+    newBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      menu.classList.toggle('hidden');
+      openIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    });
+    
+    // Close menu when clicking on a link
+    menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menu.classList.add('hidden');
+        openIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+      });
+    });
+  }
+  
+  // Run on initial load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupMobileMenu);
+  } else {
+    setupMobileMenu();
+  }
+  
+  // Run on page transitions
+  document.addEventListener('astro:page-load', setupMobileMenu);
+</script>
