@@ -4,11 +4,14 @@ import type { CollectionEntry } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
 import { ClientRouter } from 'astro:transitions'; 
 import ThemeToggle from '../components/ThemeToggle.astro';
+import LanguageSelector from '../components/LanguageSelector.astro';
+import { useTranslations } from '../i18n/utils';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   headings?: MarkdownHeading[];
+  lang?: 'es' | 'en';
 }
 
 type GroupedDocs = Record<string, {
@@ -17,22 +20,34 @@ type GroupedDocs = Record<string, {
   items?: CollectionEntry<'docs'>[];
 }>;
 
-const { title, headings } = Astro.props;
+const { title, headings, lang = 'es' } = Astro.props;
 
-const allDocs = await getCollection('docs');
+// Get translations
+const t = useTranslations(lang);
+
+// Filter docs by language
+const allDocs = await getCollection('docs', ({ slug }) => {
+  if (lang === 'en') return slug.startsWith('en/');
+  return !slug.startsWith('en/');
+});
+
 const groupedDocs = allDocs.reduce<GroupedDocs>((acc, doc) => {
-  const parts = doc.slug.split('/');
+  // Remove 'en/' prefix if present for grouping
+  const cleanSlug = doc.slug.replace(/^en\//, '');
+  const parts = cleanSlug.split('/');
   if (parts.length > 1) {
     const folderName = parts[0];
     if (!acc[folderName]) acc[folderName] = { type: 'folder', items: [] };
     acc[folderName].items?.push(doc);
   } else {
-    acc[doc.slug] = { type: 'file', item: doc };
+    acc[cleanSlug] = { type: 'file', item: doc };
   }
   return acc;
 }, {});
 
-const sortOrder = ['guia-docente', 'instalacion', 'arquitectura', 'riesgos'];
+const sortOrder = lang === 'es' 
+  ? ['guia-docente', 'instalacion', 'arquitectura', 'riesgos']
+  : ['teacher-guide', 'installation', 'architecture', 'risks'];
 
 const flatDocs = sortOrder.flatMap(key => {
   const entry = groupedDocs[key];
@@ -48,19 +63,21 @@ const prevDoc = flatDocs[currentIndex - 1];
 const nextDoc = flatDocs[currentIndex + 1];
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const description = `Documentación completa de ${title}. Aprende cómo usar Edurun para garantizar integridad académica en evaluaciones de Python con LTI 1.3 y Canvas LMS.`;
+const description = lang === 'es' 
+  ? `Documentación completa de ${title}. Aprende cómo usar Edurun para garantizar integridad académica en evaluaciones de Python con LTI 1.3 y Canvas LMS.`
+  : `Complete documentation for ${title}. Learn how to use Edurun to ensure academic integrity in Python assessments with LTI 1.3 and Canvas LMS.`;
 ---
 
 <!doctype html>
-<html lang="es" class="scroll-smooth" transition:persist data-astro-transition="none">
+<html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/logo.png" />
     
     <!-- Primary Meta Tags -->
-    <title>{title} | Documentación Edurun</title>
-    <meta name="title" content={`${title} | Documentación Edurun`} />
+    <title>{title} | {lang === 'es' ? 'Documentación Edurun' : 'Edurun Documentation'}</title>
+    <meta name="title" content={`${title} | ${lang === 'es' ? 'Documentación Edurun' : 'Edurun Documentation'}`} />
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonicalURL} />
@@ -68,14 +85,15 @@ const description = `Documentación completa de ${title}. Aprende cómo usar Edu
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article" />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:title" content={`${title} | Documentación Edurun`} />
+    <meta property="og:title" content={`${title} | ${lang === 'es' ? 'Documentación Edurun' : 'Edurun Documentation'}`} />
     <meta property="og:description" content={description} />
-    <meta property="og:site_name" content="Edurun Docs" />
+    <meta property="og:site_name" content={lang === 'es' ? 'Edurun Docs' : 'Edurun Documentation'} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary" />
     <meta property="twitter:url" content={canonicalURL} />
-    <meta property="twitter:title" content={`${title} | Documentación Edurun`} />
+    <meta property="twitter:title" content={`${title} | ${lang === 'es' ? 'Documentación Edurun' : 'Edurun Documentation'}`} />
     <meta property="twitter:description" content={description} />
     
     <ClientRouter />
@@ -134,7 +152,7 @@ const description = `Documentación completa de ${title}. Aprende cómo usar Edu
   
   <body class="bg-white dark:bg-[#1e1e20] text-gray-800 dark:text-gray-200 min-h-screen antialiased">
     
-    <header transition:persist="header" transition:name="header" class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#1e1e20]/95 border-b border-gray-200 dark:border-gray-700 backdrop-blur-md h-16">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#1e1e20]/95 border-b border-gray-200 dark:border-gray-700 backdrop-blur-md h-16">
       <div class="h-full px-4 md:px-6 flex items-center justify-between">
         
         <div class="flex items-center gap-4">
@@ -148,31 +166,14 @@ const description = `Documentación completa de ${title}. Aprende cómo usar Edu
         </div>
 
         <div class="flex items-center gap-4">
-             <div class="relative group hidden sm:block">
-                <button type="button" class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-edurun-blue transition-colors px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50 dark:bg-gray-800">
-                    <span id="current-lang-label">Español</span>
-                    <svg class="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </button>
-                
-                <div class="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top-right z-[100] py-1 flex flex-col overflow-hidden">
-                    <button type="button" onclick="changeLanguage('es')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2 cursor-pointer">
-                        <span>🇪🇸 Español</span>
-                    </button>
-                    <button type="button" onclick="changeLanguage('en')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2 cursor-pointer">
-                        <span>🇺🇸 English</span>
-                    </button>
-                    <button type="button" onclick="changeLanguage('pt')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2 cursor-pointer">
-                        <span>🇧🇷 Português</span>
-                    </button>
-                </div>
-            </div>
+            <LanguageSelector />
             <ThemeToggle />
         </div>
       </div>
     </header>
 
     <div class="flex pt-16 min-h-screen">
-        <aside transition:persist="sidebar-left" transition:name="sidebar-left" id="sidebar-left" class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-4rem)] transform -translate-x-full md:translate-x-0 bg-gray-50 dark:bg-[#18181a] border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
+        <aside id="sidebar-left" class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-4rem)] transform -translate-x-full md:translate-x-0 bg-gray-50 dark:bg-[#18181a] border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
             <div class="p-6">
                 <nav class="space-y-2">
                     {sortOrder.map((key) => {
@@ -190,7 +191,7 @@ const description = `Documentación completa de ${title}. Aprende cómo usar Edu
                                     <summary class="flex items-center justify-between px-3 py-2 text-sm font-bold text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md select-none transition-colors">
                                         <span class="capitalize flex items-center gap-2">
                                             <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
-                                            {key.replace('-', ' ')}
+                                            {(t.docs.folders as any)[key] || key.replace('-', ' ')}
                                         </span>
                                         <svg class="w-4 h-4 transition-transform group-open/folder:rotate-180 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                                     </summary>
@@ -226,14 +227,14 @@ const description = `Documentación completa de ${title}. Aprende cómo usar Edu
                 <div class="mt-16 pt-8 border-t border-gray-100 dark:border-gray-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {prevDoc ? (
                         <a href={`/docs/${prevDoc.slug}`} class="group p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-edurun-blue dark:hover:border-edurun-blue hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all">
-                            <div class="text-xs text-gray-400 font-medium uppercase mb-1">Anterior</div>
+                            <div class="text-xs text-gray-400 font-medium uppercase mb-1">{t.docs.nav.previous}</div>
                             <div class="text-edurun-blue font-semibold group-hover:underline">{prevDoc.data.title}</div>
                         </a>
                     ) : <div></div>}
                     
                     {nextDoc && (
                         <a href={`/docs/${nextDoc.slug}`} class="group p-4 border border-gray-200 dark:border-gray-700 rounded-xl text-right hover:border-edurun-blue dark:hover:border-edurun-blue hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all">
-                            <div class="text-xs text-gray-400 font-medium uppercase mb-1">Siguiente</div>
+                            <div class="text-xs text-gray-400 font-medium uppercase mb-1">{t.docs.nav.next}</div>
                             <div class="text-edurun-blue font-semibold group-hover:underline">{nextDoc.data.title}</div>
                         </a>
                     )}
@@ -243,7 +244,7 @@ const description = `Documentación completa de ${title}. Aprende cómo usar Edu
 
         <aside class="hidden xl:block fixed top-16 right-0 w-64 h-[calc(100vh-4rem)] bg-white dark:bg-[#1e1e20] border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
             <div class="p-8">
-                <h5 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4">En esta página</h5>
+                <h5 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4">{t.docs.nav.onThisPage}</h5>
                 <ul id="toc-list" class="space-y-3 text-sm border-l-2 border-gray-100 dark:border-gray-800">
                     {headings?.map((h) => (
                         <li class={`pl-3 -ml-[2px] ${h.depth === 3 ? 'pl-6' : ''}`}>

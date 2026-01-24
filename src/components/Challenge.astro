@@ -1,5 +1,9 @@
 ---
 // src/components/Challenge.astro
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 <section class="py-24 bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -7,14 +11,16 @@
     <div class="grid md:grid-cols-2 gap-12 items-center">
       <div>
         <h2 class="text-3xl md:text-4xl font-bold text-edurun-dark mb-6">
-          Los detectores de IA <br />
-          <span class="text-gray-400">ya no son suficientes.</span>
+          {t.challenge.title}
         </h2>
         <p class="text-lg text-gray-600 mb-6 leading-relaxed">
-          Estudios recientes demuestran que las herramientas de detección actuales tienen una precisión cercana al <strong>0.5</strong>, lo que equivale a adivinar al azar.
+          {t.challenge.subtitle}
+        </p>
+        <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+          <strong>{t.challenge.problem}:</strong> {t.challenge.problemText}
         </p>
         <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-          El uso indiscriminado de GenAI en evaluaciones provoca una "degradación de habilidades" crítica en los futuros ingenieros. Edurun cambia el enfoque: no solo detectamos, <strong>trazabilizamos el proceso</strong>.
+          <strong>{t.challenge.solution}:</strong> {t.challenge.solutionText}
         </p>
         
         <ul class="space-y-4">
@@ -37,16 +43,16 @@
         <div class="tilt-card bg-white p-8 rounded-2xl shadow-xl border border-gray-100 relative z-10 transform transition-all duration-500 hover:shadow-2xl">
           <div class="flex justify-between items-end mb-6">
             <div>
-              <p class="text-sm text-gray-500 uppercase tracking-wide font-semibold">Precisión Promedio</p>
+              <p class="text-sm text-gray-500 uppercase tracking-wide font-semibold">{t.dashboard.accuracy}</p>
               <p class="text-4xl font-bold text-edurun-dark mt-1">~50%</p>
             </div>
-            <span class="px-3 py-1 bg-red-50 text-red-600 text-sm font-medium rounded-full animate-pulse">Ineficaz</span>
+            <span class="px-3 py-1 bg-red-50 text-red-600 text-sm font-medium rounded-full animate-pulse">{t.dashboard.ineffective}</span>
           </div>
           
           <div class="space-y-4">
             <div>
               <div class="flex justify-between text-sm mb-1">
-                <span class="font-medium text-gray-700">Detectores Tradicionales</span>
+                <span class="font-medium text-gray-700">{t.dashboard.traditional}</span>
                 <span class="text-gray-500">52%</span>
               </div>
               <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
@@ -55,8 +61,8 @@
             </div>
             <div>
               <div class="flex justify-between text-sm mb-1">
-                <span class="font-medium text-gray-700">Edurun (Trazabilidad)</span>
-                <span class="text-edurun-blue font-bold">100% Visibilidad</span>
+                <span class="font-medium text-gray-700">{t.dashboard.edurunTraceability}</span>
+                <span class="text-edurun-blue font-bold">{t.dashboard.visibility}</span>
               </div>
               <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden relative">
                 <div class="bg-gradient-to-r from-edurun-blue via-purple-500 to-edurun-purple h-2.5 rounded-full animate-progress animate-gradient" style="width: 100%; animation-delay: 0.8s"></div>
@@ -66,7 +72,7 @@
           </div>
           
           <div class="mt-8 pt-6 border-t border-gray-100 text-sm text-gray-500">
-            * Datos basados en estudios sobre detectores como GPTZero y DetectGPT.
+            {t.dashboard.disclaimer}
           </div>
         </div>
         

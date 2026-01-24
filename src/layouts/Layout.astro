@@ -7,20 +7,29 @@ interface Props {
 	title: string;
 	description?: string;
 	image?: string;
+	lang?: 'es' | 'en';
 }
 
 const { 
 	title, 
 	description = "Edurun es la plataforma de evaluación de código Python que garantiza integridad académica mediante trazabilidad avanzada, contenedores Docker seguros y detección de uso indebido de IA. Compatible con Canvas LMS vía LTI 1.3.",
-	image = "/og-image.png"
+	image = "/og-image.png",
+	lang = 'es'
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
+
+// Alternate language URLs for hreflang
+const currentPath = Astro.url.pathname;
+const esPath = currentPath.replace(/^\/en(\/|$)/, '/');
+const enPath = currentPath.startsWith('/en') ? currentPath : `/en${currentPath}`;
+const esURL = new URL(esPath || '/', Astro.site);
+const enURL = new URL(enPath, Astro.site);
 ---
 
 <!doctype html>
-<html lang="es" class="scroll-smooth">
+<html lang={lang} class="scroll-smooth">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -35,6 +44,11 @@ const ogImage = new URL(image, Astro.site);
 		<meta name="robots" content="index, follow" />
 		<link rel="canonical" href={canonicalURL} />
 		
+		<!-- Alternate Language Links (hreflang) -->
+		<link rel="alternate" hreflang="es" href={esURL} />
+		<link rel="alternate" hreflang="en" href={enURL} />
+		<link rel="alternate" hreflang="x-default" href={esURL} />
+		
 		<!-- Favicon -->
 		<link rel="icon" type="image/png" href="/logo.png" />
 		<link rel="apple-touch-icon" href="/logo.png" />
@@ -47,7 +61,7 @@ const ogImage = new URL(image, Astro.site);
 		<meta property="og:image" content={ogImage} />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
-		<meta property="og:locale" content="es_ES" />
+		<meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
 		<meta property="og:site_name" content="Edurun" />
 		
 		<!-- Twitter -->

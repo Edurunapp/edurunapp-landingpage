@@ -1,4 +1,8 @@
 ---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const currentYear = new Date().getFullYear();
 ---
 
@@ -12,24 +16,24 @@ const currentYear = new Date().getFullYear();
           <span class="text-xl font-bold text-gray-900">Edurun</span>
         </div>
         <p class="text-gray-500 max-w-sm mb-6">
-          Plataforma de evaluación para Python con enfoque en integridad académica, trazabilidad y aprendizaje profundo.
+          {t.footer.description}
         </p>
       </div>
 
       <div class="grid grid-cols-2 gap-8">
         <div>
-          <h3 class="font-semibold text-gray-900 mb-4">Contacto</h3>
+          <h3 class="font-semibold text-gray-900 mb-4">{t.nav.contact}</h3>
           <ul class="space-y-3 text-sm text-gray-600">
             <li>
-              <a href="/contacto" class="hover:text-edurun-blue transition">Formulario de contacto</a>
+              <a href={lang === 'en' ? '/en/contacto' : '/contacto'} class="hover:text-edurun-blue transition">{lang === 'en' ? 'Contact form' : 'Formulario de contacto'}</a>
             </li>
           </ul>
         </div>
 
         <div>
-          <h3 class="font-semibold text-gray-900 mb-4">Recursos</h3>
+          <h3 class="font-semibold text-gray-900 mb-4">{t.footer.resources}</h3>
           <ul class="space-y-3 text-sm text-gray-600">
-            <li><a href="/docs/guia-docente" class="hover:text-edurun-blue transition">Documentación</a></li>
+            <li><a href="/docs/guia-docente" class="hover:text-edurun-blue transition">{t.nav.docs}</a></li>
             <li><a href="https://github.com/Edurunapp" target="_blank" class="hover:text-edurun-blue transition">GitHub</a></li>
           </ul>
         </div>
@@ -39,7 +43,7 @@ const currentYear = new Date().getFullYear();
 
     <div class="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
       <p class="text-sm text-gray-500">
-        &copy; {currentYear} Edurun. Todos los derechos reservados.
+        &copy; {currentYear} Edurun. {t.footer.rights}
       </p>
     </div>
   </div>

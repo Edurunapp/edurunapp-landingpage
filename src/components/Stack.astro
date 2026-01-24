@@ -1,11 +1,15 @@
 ---
 // src/components/Stack.astro
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <section class="py-16 border-t border-gray-100 bg-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <p class="text-center text-sm font-semibold text-gray-500 uppercase tracking-wider mb-8">
-      Potenciado por tecnología moderna
+      {t.stack.subtitle}
     </p>
     <div class="grid grid-cols-2 md:grid-cols-5 gap-8 items-center">
       

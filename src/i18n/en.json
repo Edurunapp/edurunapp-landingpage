@@ -1,0 +1,213 @@
+{
+  "nav": {
+    "home": "Home",
+    "features": "Features",
+    "integrity": "Integrity",
+    "docs": "Documentation",
+    "contact": "Contact",
+    "language": "Language"
+  },
+  "hero": {
+    "badge": "LTI 1.3 Integration with Canvas LMS",
+    "title": "Academic Integrity",
+    "titleHighlight": "Without Compromise",
+    "subtitle": "Educational platform that detects plagiarism with AI, executes code securely in Docker containers, and provides complete traceability of the development process.",
+    "ctaPrimary": "Contact Us",
+    "ctaSecondary": "View Documentation"
+  },
+  "features": {
+    "badge": "Key features",
+    "title": "Everything you need to evaluate code securely",
+    "subtitle": "From plagiarism detection to execution in isolated containers.",
+    "plagiarism": {
+      "title": "AI-Powered Plagiarism Detection",
+      "description": "Semantic code analysis using language models to detect similarities beyond syntax."
+    },
+    "docker": {
+      "title": "Secure Execution in Docker",
+      "description": "Each code runs in isolated, ephemeral containers with resource limits, ensuring complete security."
+    },
+    "traceability": {
+      "title": "Complete Traceability",
+      "description": "Records every student action: keystrokes, time spent, and code changes in real-time."
+    },
+    "lti": {
+      "title": "LTI 1.3 Integration",
+      "description": "Native connection with Canvas LMS. Grades sync automatically without manual intervention."
+    },
+    "pytest": {
+      "title": "pytest Evaluation",
+      "description": "Teachers define unit tests in pytest. The system automatically runs and evaluates each submission."
+    },
+    "realtime": {
+      "title": "Real-Time Editor",
+      "description": "Students write code directly in the browser with syntax highlighting and autocomplete."
+    }
+  },
+  "challenge": {
+    "badge": "The challenge",
+    "title": "Academic Integrity Without Compromise",
+    "subtitle": "Generative AI has changed the game in education.",
+    "problem": "The Problem",
+    "problemText": "Students can generate complete code with ChatGPT in seconds, making it impossible to verify the actual authorship of the work.",
+    "solution": "Our Solution",
+    "solutionText": "Complete traceability of the development process: every keystroke, every pause, every modification is recorded. We don't just evaluate the final code, but the entire thought process behind it.",
+    "features": {
+      "keystroke": "Keystroke logging",
+      "time": "Time spent on each line",
+      "changes": "Change history",
+      "patterns": "Writing pattern analysis"
+    }
+  },
+  "stack": {
+    "badge": "Tech stack",
+    "title": "Built with modern and reliable technologies",
+    "subtitle": "A robust architecture that ensures security, scalability, and performance."
+  },
+  "traceability": {
+    "badge": "Traceability",
+    "title": "Every action tells a story",
+    "subtitle": "Turn development data into insights about the learning process.",
+    "features": {
+      "keystroke": {
+        "title": "Keystroke Recording",
+        "description": "Captures every keystroke, including copy-paste, allowing identification of code copied from external sources."
+      },
+      "timeline": {
+        "title": "Timeline",
+        "description": "Visualize code evolution minute by minute. Detect suspicious pauses or sudden massive changes."
+      },
+      "heatmap": {
+        "title": "Heat Map",
+        "description": "Identify which parts of the code the student spent the most time on, revealing areas of difficulty or possible copying."
+      },
+      "analysis": {
+        "title": "Pattern Analysis",
+        "description": "ML algorithms detect inconsistent writing patterns suggesting AI use or copied code."
+      }
+    }
+  },
+  "faq": {
+    "badge": "Frequently asked questions",
+    "title": "Have questions? We're here to help",
+    "subtitle": "Answers to the most common questions about Edurun.",
+    "items": {
+      "lti": {
+        "question": "How does Canvas integration work?",
+        "answer": "Edurun natively implements the LTI 1.3 (Learning Tools Interoperability) protocol. This means students access Edurun directly from Canvas without needing to log in separately. Grades obtained in Edurun automatically sync with Canvas gradebook. Initial setup takes approximately 10 minutes following our <a href=\"/en/docs/installation/canvas\" class=\"text-edurun-blue hover:underline\">installation guide</a>."
+      },
+      "ai": {
+        "question": "How do you detect AI use like ChatGPT?",
+        "answer": "We don't rely on a single method. We combine: (1) <strong>Writing pattern analysis</strong>: detect abrupt changes in style or speed suggesting copy-paste of AI-generated code. (2) <strong>Semantic comparison</strong>: compare student code with typical ChatGPT/Copilot patterns. (3) <strong>Temporal traceability</strong>: complex code appearing suddenly without previous iterations is highly suspicious. The system generates a confidence report that the teacher interprets."
+      },
+      "languages": {
+        "question": "Do you only support Python?",
+        "answer": "Currently, yes. We focus on Python because it's the most widely used language in introductory programming and data science courses. However, the architecture is designed to be language-agnostic. Support for JavaScript, Java, and C++ is on our 2026 roadmap."
+      },
+      "security": {
+        "question": "Is it safe to execute student code?",
+        "answer": "Absolutely. Each code runs in an <strong>isolated, ephemeral Docker container</strong> with limited resources (CPU, memory, execution time). Containers have no network access or access to the host file system. After execution, the container is automatically destroyed, ensuring complete security."
+      },
+      "cloud": {
+        "question": "Do I need to install anything on my computer?",
+        "answer": "No. Edurun is a <strong>100% cloud-based platform</strong>. Both teachers and students access from the web browser without needing to install any software. Only an internet connection and a modern browser (Chrome, Firefox, Safari, or Edge) are required."
+      }
+    }
+  },
+  "contact": {
+    "badge": "We're here to help",
+    "title": "Ready to",
+    "titleHighlight": "transform",
+    "titleEnd": "your assessments?",
+    "subtitle": "Tell us about your institution and discover how Edurun can help you maintain academic integrity in your programming courses.",
+    "formTitle": "Send us a message",
+    "form": {
+      "name": "Full name",
+      "email": "Institutional email",
+      "institution": "Institution",
+      "role": "Role",
+      "subject": "Subject",
+      "message": "Message",
+      "required": "required",
+      "send": "Send message",
+      "sending": "Sending...",
+      "success": "Message sent successfully! We'll respond soon.",
+      "error": "There was an error sending the message. Please try again.",
+      "placeholder": {
+        "name": "John Doe",
+        "email": "john.doe@university.edu",
+        "institution": "University of Chile",
+        "message": "Tell us about your needs..."
+      },
+      "roleOptions": {
+        "select": "Select your role",
+        "profesor": "Professor/Teacher",
+        "coordinador": "Academic Coordinator",
+        "director": "Department Director",
+        "ti": "IT Manager",
+        "otro": "Other"
+      },
+      "subjectOptions": {
+        "select": "Select a subject",
+        "demo": "Request demo",
+        "integration": "LMS Integration",
+        "support": "Technical support",
+        "other": "Other"
+      }
+    },
+    "info": {
+      "title": "Contact information",
+      "email": "Email",
+      "schedule": "Business hours",
+      "scheduleTime": "Monday to Friday: 9:00 AM - 6:00 PM (CLT)",
+      "response": "Response time",
+      "responseTime": "We respond within 24 business hours"
+    }
+  },
+  "footer": {
+    "description": "Educational platform for Python code evaluation with academic integrity, AI-powered plagiarism detection, and secure Docker execution.",
+    "product": "Product",
+    "resources": "Resources",
+    "company": "Company",
+    "rights": "All rights reserved."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "Sorry, the page you're looking for doesn't exist or has been moved.",
+    "home": "Back to home",
+    "docs": "View documentation",
+    "quickLinks": "Quick links"  },
+  "dashboard": {
+    "accuracy": "Average Accuracy",
+    "ineffective": "Ineffective",
+    "traditional": "Traditional Detectors",
+    "edurunTraceability": "Edurun (Traceability)",
+    "visibility": "100% Visibility",
+    "disclaimer": "* Data based on studies of detectors like GPTZero and DetectGPT.",
+    "student": "Student",
+    "approved": "Approved",
+    "executions": "Executions",
+    "testsPassed": "Tests Passed",
+    "totalTime": "Total Time",
+    "suspiciousActivity": "Suspicious Activity Log",
+    "exitedFullscreen": "Exited fullscreen",
+    "copyPaste": "Copy-paste detected"
+  },
+  "docs": {
+    "folders": {
+      "guia-docente": "Teacher Guide",
+      "teacher-guide": "Teacher Guide",
+      "instalacion": "Installation",
+      "installation": "Installation",
+      "arquitectura": "Architecture",
+      "architecture": "Architecture",
+      "riesgos": "Risks",
+      "risks": "Risks"
+    },
+    "nav": {
+      "previous": "Previous",
+      "next": "Next",
+      "onThisPage": "On this page"
+    }
+  }
+}

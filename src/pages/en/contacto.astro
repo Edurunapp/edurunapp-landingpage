@@ -1,0 +1,434 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+
+// EmailJS configuration from environment variables
+const EMAILJS_SERVICE_ID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY;
+---
+
+<Layout title="Contact Us - Edurun" lang="en">
+  <Navbar />
+  
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Header Section -->
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 bg-edurun-blue/10 border border-edurun-blue/20 rounded-full px-4 py-1.5 mb-6">
+          <span class="flex h-2 w-2 rounded-full bg-edurun-blue"></span>
+          <span class="text-sm font-medium text-edurun-blue tracking-wide">We're here to help</span>
+        </div>
+        
+        <h1 class="text-5xl md:text-6xl font-extrabold text-edurun-dark tracking-tight mb-6">
+          Ready to <span class="text-transparent bg-clip-text bg-gradient-to-r from-edurun-blue to-edurun-purple">transform</span> your assessments?
+        </h1>
+        
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Tell us about your institution and discover how Edurun can help you maintain academic integrity in your programming courses.
+        </p>
+      </div>
+
+      <!-- Main Content Grid -->
+      <div class="grid md:grid-cols-2 gap-8 items-start">
+        
+        <!-- Contact Form -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-10">
+          <h2 class="text-2xl font-bold text-edurun-dark mb-6">Send us a message</h2>
+          
+          <form id="contact-form" class="space-y-4">
+            <!-- Honeypot field (hidden from users, catches bots) -->
+            <input 
+              type="text" 
+              name="honeypot" 
+              id="honeypot"
+              class="hidden" 
+              tabindex="-1" 
+              autocomplete="off"
+              aria-hidden="true"
+            />
+            
+            <!-- Name -->
+            <div>
+              <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
+                Full name <span class="text-red-500" aria-label="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                required
+                minlength="2"
+                maxlength="100"
+                autocomplete="name"
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all text-base"
+                placeholder="John Doe"
+              />
+              <span class="text-red-500 text-sm mt-1 hidden" id="name-error"></span>
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
+                Institutional email <span class="text-red-500" aria-label="required">*</span>
+              </label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                required
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$"
+                autocomplete="email"
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all text-base"
+                placeholder="john.doe@university.edu"
+              />
+              <span class="text-red-500 text-sm mt-1 hidden" id="email-error"></span>
+            </div>
+
+            <!-- Institution -->
+            <div>
+              <label for="institution" class="block text-sm font-semibold text-gray-700 mb-2">
+                Institution <span class="text-red-500" aria-label="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="institution" 
+                name="institution" 
+                required
+                minlength="2"
+                maxlength="150"
+                autocomplete="organization"
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all text-base"
+                placeholder="University of Chile"
+              />
+              <span class="text-red-500 text-sm mt-1 hidden" id="institution-error"></span>
+            </div>
+
+            <!-- Role -->
+            <div>
+              <label for="role" class="block text-sm font-semibold text-gray-700 mb-2">
+                Role <span class="text-red-500" aria-label="required">*</span>
+              </label>
+              <select 
+                id="role" 
+                name="role" 
+                required
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all bg-white text-base"
+              >
+                <option value="">Select your role</option>
+                <option value="profesor">Professor/Teacher</option>
+                <option value="coordinador">Academic Coordinator</option>
+                <option value="director">Department Director</option>
+                <option value="ti">IT Manager</option>
+                <option value="otro">Other</option>
+              </select>
+              <span class="text-red-500 text-sm mt-1 hidden" id="role-error"></span>
+            </div>
+
+            <!-- Subject -->
+            <div>
+              <label for="subject" class="block text-sm font-semibold text-gray-700 mb-2">
+                Subject <span class="text-red-500" aria-label="required">*</span>
+              </label>
+              <select 
+                id="subject" 
+                name="subject" 
+                required
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all bg-white text-base"
+              >
+                <option value="">Select a subject</option>
+                <option value="demo">Request demo</option>
+                <option value="integration">LMS Integration</option>
+                <option value="support">Technical support</option>
+                <option value="other">Other</option>
+              </select>
+              <span class="text-red-500 text-sm mt-1 hidden" id="subject-error"></span>
+            </div>
+
+            <!-- Message -->
+            <div>
+              <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">
+                Message <span class="text-red-500" aria-label="required">*</span>
+              </label>
+              <textarea 
+                id="message" 
+                name="message" 
+                rows="5" 
+                required
+                minlength="10"
+                maxlength="1000"
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all resize-none text-base"
+                placeholder="Tell us about your needs..."
+              ></textarea>
+              <div class="flex justify-between mt-1">
+                <span class="text-red-500 text-sm hidden" id="message-error"></span>
+                <span id="char-counter" class="text-xs text-gray-500 ml-auto">0/1000</span>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              id="submit-btn"
+              class="w-full bg-gradient-to-r from-edurun-blue to-edurun-purple text-white px-6 py-3 md:py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span id="btn-text">Send message</span>
+              <svg id="btn-spinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </button>
+          </form>
+
+          <!-- Success/Error Messages -->
+          <div id="success-message" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+            <p class="text-green-800 font-medium">Message sent successfully! We'll respond soon.</p>
+          </div>
+          <div id="error-message" class="hidden mt-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <p class="text-red-800 font-medium">There was an error sending the message. Please try again.</p>
+          </div>
+        </div>
+
+        <!-- Contact Information & Features -->
+        <div class="space-y-6">
+          
+          <!-- Quick Contact Cards -->
+          <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+            <h3 class="text-xl font-bold text-edurun-dark mb-6">Other ways to contact us</h3>
+            
+            <div class="space-y-4">
+              <!-- Email -->
+              <a href="mailto:b.nezlara@uandresbello.edu" class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors group">
+                <div class="bg-gradient-to-br from-edurun-blue/10 to-edurun-purple/10 p-3 rounded-xl group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 text-edurun-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">Email</p>
+                  <p class="text-sm text-edurun-blue">b.nezlara@uandresbello.edu</p>
+                </div>
+              </a>
+
+              <!-- Documentation -->
+              <a href="/docs/en/teacher-guide" class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors group">
+                <div class="bg-gradient-to-br from-edurun-blue/10 to-edurun-purple/10 p-3 rounded-xl group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 text-edurun-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">Documentation</p>
+                  <p class="text-sm text-gray-600">Explore our guides and resources</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Why Choose Edurun -->
+          <div class="bg-gradient-to-br from-edurun-blue/5 to-edurun-purple/5 rounded-2xl border border-edurun-blue/20 p-8">
+            <h3 class="text-xl font-bold text-edurun-dark mb-4">Why choose Edurun?</h3>
+            <ul class="space-y-3">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Native Canvas LMS LTI 1.3 integration</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Complete traceability of student actions</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Isolated and secure execution environment</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Specialized technical support in Spanish</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <Footer />
+
+  <script define:vars={{ EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY }}>
+    // Initialize EmailJS
+    (function() {
+      // @ts-ignore
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+    })();
+
+    // Form validation and submission
+    const form = document.getElementById('contact-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+    const successMessage = document.getElementById('success-message');
+    const errorMessage = document.getElementById('error-message');
+    const messageTextarea = document.getElementById('message');
+    const messageCounter = document.getElementById('message-counter');
+
+    // Email validation
+    function isValidEmail(email) {
+      return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email);
+    }
+
+    // Show error function
+    function showError(fieldId, message) {
+      const errorSpan = document.getElementById(`${fieldId}-error`);
+      if (errorSpan) {
+        errorSpan.textContent = message;
+        errorSpan.classList.remove('hidden');
+      }
+    }
+
+    // Clear error function
+    function clearError(fieldId) {
+      const errorSpan = document.getElementById(`${fieldId}-error`);
+      if (errorSpan) {
+        errorSpan.classList.add('hidden');
+      }
+    }
+
+    // Clear errors on input
+    ['name', 'email', 'institution', 'role', 'subject', 'message'].forEach(field => {
+      document.getElementById(field)?.addEventListener('input', () => clearError(field));
+    });
+
+    // Rate limiting
+    let lastSubmitTime = 0;
+    const RATE_LIMIT = 60000; // 60 seconds
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Clear previous messages
+      successMessage?.classList.add('hidden');
+      errorMessage?.classList.add('hidden');
+
+      // Check honeypot
+      const honeypot = document.getElementById('honeypot').value;
+      if (honeypot) {
+        console.log('Bot detected');
+        return;
+      }
+
+      // Rate limiting
+      const now = Date.now();
+      if (now - lastSubmitTime < RATE_LIMIT) {
+        showError('message', `Please wait ${Math.ceil((RATE_LIMIT - (now - lastSubmitTime)) / 1000)} seconds before submitting again.`);
+        return;
+      }
+
+      // Validate fields
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const institution = document.getElementById('institution').value.trim();
+      const role = document.getElementById('role').value;
+      const subject = document.getElementById('subject').value;
+      const message = document.getElementById('message').value.trim();
+
+      let hasError = false;
+
+      if (name.length < 2) {
+        showError('name', 'Name must be at least 2 characters.');
+        hasError = true;
+      }
+
+      if (!isValidEmail(email)) {
+        showError('email', 'Please enter a valid email address.');
+        hasError = true;
+      }
+
+      if (institution.length < 2) {
+        showError('institution', 'Institution must be at least 2 characters.');
+        hasError = true;
+      }
+
+      if (!role) {
+        showError('role', 'Please select a role.');
+        hasError = true;
+      }
+
+      if (!subject) {
+        showError('subject', 'Please select a subject.');
+        hasError = true;
+      }
+
+      if (message.length < 10) {
+        showError('message', 'Message must be at least 10 characters.');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      // Disable button and show loading
+      submitBtn.disabled = true;
+      btnText.classList.add('hidden');
+      btnSpinner.classList.remove('hidden');
+      submitBtn.style.opacity = '0.7';
+
+      try {
+        // Send email using EmailJS
+        const templateParams = {
+          from_name: name,
+          from_email: email,
+          institution: institution,
+          role: role,
+          subject: subject,
+          message: message,
+          to_email: 'vjestayvaldiva@gmail.com'
+        };
+
+        await emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          templateParams,
+          EMAILJS_PUBLIC_KEY
+        );
+
+        // Success
+        successMessage?.classList.remove('hidden');
+        form.reset();
+        charCounter.textContent = '0/1000';
+        lastSubmitTime = Date.now();
+        
+        // Scroll to success message
+        successMessage?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      } catch (error) {
+        console.error('Error sending email:', error);
+        errorMessage?.classList.remove('hidden');
+        errorMessage?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } finally {
+        // Re-enable button
+        submitBtn.disabled = false;
+        btnText.classList.remove('hidden');
+        btnSpinner.classList.add('hidden');
+        submitBtn.style.opacity = '1';
+      }
+    });
+  </script>
+
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</Layout>

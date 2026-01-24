@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 // 1. Importamos el tipo necesario para que TypeScript no se queje
 import type { CollectionEntry } from 'astro:content';
 import DocsLayout from '../../layouts/DocsLayout.astro';
-
+import { getLangFromUrl } from '../../i18n/utils';
 
 // 2. Definimos que 'entry' es un documento de la colección 'docs'
 interface Props {
@@ -20,8 +20,11 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content, headings } = await entry.render(); // <--- Extraemos 'headings'
+
+// Detect language from URL or slug
+const lang = entry.slug.startsWith('en/') ? 'en' : 'es';
 ---
 
-<DocsLayout title={entry.data.title} headings={headings}>
+<DocsLayout title={entry.data.title} headings={headings} lang={lang}>
   <Content />
 </DocsLayout>

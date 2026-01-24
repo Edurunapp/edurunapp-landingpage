@@ -1,33 +1,40 @@
 ---
 // src/components/Navbar.astro
+import LanguageSelector from './LanguageSelector.astro';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const contactUrl = lang === 'en' ? '/en/contacto' : '/contacto';
 ---
-<nav transition:persist="navbar" transition:name="navbar" class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-white/95" role="navigation" aria-label="Navegación principal">
+<nav class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-white/95" role="navigation" aria-label="Navegación principal">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-20 items-center">
       
-      <a href="/" class="flex-shrink-0 flex items-center gap-2 cursor-pointer group" aria-label="Edurun - Ir a inicio">
+      <a href={lang === 'en' ? '/en' : '/'} class="flex-shrink-0 flex items-center gap-2 cursor-pointer group" aria-label="Edurun - Ir a inicio">
         <img class="h-10 w-auto group-hover:scale-110 transition-transform" src="/logo.png" alt="Logo de Edurun" loading="lazy" width="40" height="40" />
         <span class="text-2xl font-bold text-edurun-dark tracking-tight">Edurun</span>
       </a>
 
       <div class="hidden md:flex space-x-8" role="menubar">
-        <a href="/#funcionalidades" class="text-gray-500 hover:text-edurun-blue font-medium transition-colors" role="menuitem">
-          Funcionalidades
+        <a href={`${lang === 'en' ? '/en' : ''}/#funcionalidades`} class="text-gray-500 hover:text-edurun-blue font-medium transition-colors" role="menuitem">
+          {t.nav.features}
         </a>
-        <a href="/#integridad" class="text-gray-500 hover:text-edurun-blue font-medium transition-colors" role="menuitem">
-          Integridad
+        <a href={`${lang === 'en' ? '/en' : ''}/#integridad`} class="text-gray-500 hover:text-edurun-blue font-medium transition-colors" role="menuitem">
+          {t.nav.integrity}
         </a>
-        <a href="/docs/arquitectura" data-astro-reload class="text-gray-500 hover:text-edurun-blue font-medium transition-colors" role="menuitem">
-          Documentación
+        <a href={lang === 'en' ? '/docs/en/teacher-guide' : '/docs/guia-docente'} data-astro-reload class="text-gray-500 hover:text-edurun-blue font-medium transition-colors" role="menuitem">
+          {t.nav.docs}
         </a>
       </div>
 
-      <div class="hidden md:flex items-center">
+      <div class="hidden md:flex items-center gap-4">
+        <LanguageSelector />
         <a 
-          href="/contacto" 
+          href={contactUrl}
           class="bg-gradient-to-r from-edurun-blue to-edurun-purple text-white px-5 py-2.5 rounded-lg font-semibold shadow-md hover:shadow-lg hover:opacity-90 transition-all transform hover:-translate-y-0.5"
           aria-label="Ir a página de contacto">
-          Contáctanos
+          {t.nav.contact}
         </a>
       </div>
       
@@ -45,19 +52,22 @@
     <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden md:hidden pb-4">
       <div class="flex flex-col space-y-3">
-        <a href="/#funcionalidades" class="text-gray-500 hover:text-edurun-blue font-medium transition-colors py-2">
-          Funcionalidades
+        <a href={`${lang === 'en' ? '/en' : ''}/#funcionalidades`} class="text-gray-500 hover:text-edurun-blue font-medium transition-colors py-2">
+          {t.nav.features}
         </a>
-        <a href="/#integridad" class="text-gray-500 hover:text-edurun-blue font-medium transition-colors py-2">
-          Integridad
+        <a href={`${lang === 'en' ? '/en' : ''}/#integridad`} class="text-gray-500 hover:text-edurun-blue font-medium transition-colors py-2">
+          {t.nav.integrity}
         </a>
-        <a href="/docs/arquitectura" data-astro-reload class="text-gray-500 hover:text-edurun-blue font-medium transition-colors py-2">
-          Documentación
+        <a href={lang === 'en' ? '/docs/en/teacher-guide' : '/docs/guia-docente'} data-astro-reload class="text-gray-500 hover:text-edurun-blue font-medium transition-colors py-2">
+          {t.nav.docs}
         </a>
+        <div class="py-2">
+          <LanguageSelector />
+        </div>
         <a 
-          href="/contacto" 
+          href={contactUrl}
           class="bg-gradient-to-r from-edurun-blue to-edurun-purple text-white px-5 py-2.5 rounded-lg font-semibold shadow-md text-center mt-2">
-          Contáctanos
+          {t.nav.contact}
         </a>
       </div>
     </div>
