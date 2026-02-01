@@ -87,4 +87,16 @@ Antes de poder agregar actividades de Edurun, primero **debe activar la herramie
 
 ---
 
+> **Nota para Administradores:** Si después de completar todos los pasos no puede acceder a la herramienta debido a un error de cookies, tiene dos opciones para solucionarlo:
+>
+> **Opción 1 (Recomendada):** En los ajustes generales de la herramienta externa, cambie el modo de "Incrustado" a "Abrir en una nueva pestaña", guarde los cambios y recargue el sitio.
+>
+> **Opción 2:** Vaya a los ajustes de cookies del navegador y añada a los sitios permitidos de cookies de terceros el dominio de su instancia de Moodle (ejemplo: `[*.]milaulas.com`), guarde los cambios y recargue el sitio.
+>
+> Rutas de acceso según el navegador:
+> - **Google Chrome:** `chrome://settings/cookies`
+> - **Microsoft Edge:** `edge://settings/privacy/cookies`
+> - **Mozilla Firefox:** `about:preferences#privacy` (en la sección "Cookies y datos del sitio")
+> - **Opera:** `opera://settings/cookies`
+
 **Nota:** El Registro Dinámico elimina la necesidad de copiar manualmente el Client ID y las Keys entre plataformas, reduciendo errores humanos de configuración.
