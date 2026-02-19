@@ -88,4 +88,16 @@ Before you can add Edurun activities, you **must first activate the tool in the 
 
 ---
 
+> **Note for Administrators:** If after completing all the steps you cannot access the tool due to a cookie error, you have two options to resolve it:
+>
+> **Option 1 (Recommended):** In the general settings of the external tool, change the mode from "Embedded" to "Open in a new tab", save the changes and reload the site.
+>
+> **Option 2:** Go to your browser's cookie settings and add your Moodle instance domain to the allowed third-party cookie sites (example: `[*.]milaulas.com`), save the changes and reload the site.
+>
+> Browser-specific paths:
+> - **Google Chrome:** `chrome://settings/cookies`
+> - **Microsoft Edge:** `edge://settings/privacy/cookies`
+> - **Mozilla Firefox:** `about:preferences#privacy` (in the "Cookies and Site Data" section)
+> - **Opera:** `opera://settings/cookies`
+
 **Note:** Dynamic Registration eliminates the need to manually copy the Client ID and Keys between platforms, reducing human configuration errors.
