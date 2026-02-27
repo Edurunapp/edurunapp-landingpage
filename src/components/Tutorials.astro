@@ -1,0 +1,99 @@
+---
+// src/components/Tutorials.astro
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<section id="tutoriales" class="py-24 bg-gradient-to-b from-white to-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <div class="inline-flex items-center gap-2 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-full px-4 py-1.5 mb-6">
+        <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+        <span class="text-sm font-medium text-red-600 tracking-wide">{t.tutorials.badge}</span>
+      </div>
+      
+      <h2 class="text-3xl md:text-4xl font-bold text-edurun-dark mb-4">
+        {t.tutorials.title}
+      </h2>
+      <p class="text-lg text-gray-600">
+        {t.tutorials.subtitle}
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
+      
+      <!-- Video 1 -->
+      <div class="group">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl bg-gray-900 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
+          <div class="absolute inset-0 bg-gradient-to-br from-edurun-blue/20 to-edurun-purple/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="relative aspect-video">
+            <iframe 
+              class="w-full h-full"
+              src={t.tutorials.video1.embedUrl}
+              title={t.tutorials.video1.title}
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-edurun-blue transition-colors">
+            {t.tutorials.video1.title}
+          </h3>
+          <p class="text-gray-600">
+            {t.tutorials.video1.description}
+          </p>
+        </div>
+      </div>
+
+      <!-- Video 2 -->
+      <div class="group">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl bg-gray-900 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
+          <div class="absolute inset-0 bg-gradient-to-br from-edurun-purple/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="relative aspect-video">
+            <iframe 
+              class="w-full h-full"
+              src={t.tutorials.video2.embedUrl}
+              title={t.tutorials.video2.title}
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-edurun-purple transition-colors">
+            {t.tutorials.video2.title}
+          </h3>
+          <p class="text-gray-600">
+            {t.tutorials.video2.description}
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CTA opcional -->
+    <div class="mt-16 text-center">
+      <p class="text-gray-600 mb-6">
+        {t.tutorials.ctaText}
+      </p>
+      <a 
+        href={lang === 'en' ? '/en/docs/teacher-guide' : '/docs/guia-docente'} 
+        data-astro-reload
+        class="inline-flex items-center gap-2 bg-edurun-dark text-white px-6 py-3 rounded-xl font-semibold hover:bg-edurun-blue transition-all shadow-lg hover:shadow-xl hover:scale-105"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+        </svg>
+        {t.tutorials.ctaButton}
+      </a>
+    </div>
+
+  </div>
+</section>

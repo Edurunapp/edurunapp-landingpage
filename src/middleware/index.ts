@@ -19,7 +19,7 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     "img-src 'self' data: https: http:",
     "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net",
     "connect-src 'self' https://api.emailjs.com https://translate.googleapis.com",
-    "frame-src 'self' https://translate.google.com",
+    "frame-src 'self' https://translate.google.com https://www.youtube.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

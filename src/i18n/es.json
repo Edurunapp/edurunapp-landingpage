@@ -87,6 +87,23 @@
       }
     }
   },
+  "tutorials": {
+    "badge": "Video Tutoriales",
+    "title": "Aprende a usar Edurun en minutos",
+    "subtitle": "Guías paso a paso para empezar a evaluar código Python con integridad académica.",
+    "video1": {
+      "title": "Guía Para El Docente",
+      "description": "Aprende cómo usar Edurun en tu curso de Canvas en menos de 10 minutos.",
+      "embedUrl": "https://www.youtube.com/embed/1dnJjYyDBvQ"
+    },
+    "video2": {
+      "title": "Guía Para El Estudiante",
+      "description": "Guía para usar Edurun y realizar los exámenes.",
+      "embedUrl": "https://www.youtube.com/embed/jz00Vw85dmo"
+    },
+    "ctaText": "¿Necesitas más ayuda? Consulta nuestra documentación completa.",
+    "ctaButton": "Ver Documentación"
+  },
   "faq": {
     "badge": "Preguntas frecuentes",
     "title": "¿Tienes dudas? Te ayudamos",
