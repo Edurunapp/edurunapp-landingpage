@@ -1,8 +1,17 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import vue from '@astrojs/vue';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  // El orden importa: Tailwind primero para que procese los estilos de Vue si es necesario
-  integrations: [tailwind(), vue()],
+  site: 'https://edurun.cl',
+  integrations: [
+    tailwind(), 
+    vue(),
+    sitemap({
+      changefreq: 'weekly',
+      priority: 0.7,
+      lastmod: new Date(),
+    })
+  ],
 });

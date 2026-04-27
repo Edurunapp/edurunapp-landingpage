@@ -5,18 +5,59 @@ import Hero from '../components/Hero.astro';
 import Challenge from '../components/Challenge.astro';
 import Features from '../components/Features.astro';
 import Traceability from '../components/Traceability.astro';
-import Stack from '../components/Stack.astro'; // <--- Nuevo
-import Footer from '../components/Footer.astro'; // <--- Nuevo
+import Tutorials from '../components/Tutorials.astro';
+import Stack from '../components/Stack.astro';
+import FAQ from '../components/FAQ.astro';
+import Footer from '../components/Footer.astro';
 ---
 
-<Layout title="Edurun | Integridad Académica para Python">
+<Layout 
+	title="Edurun | Integridad Académica para Python" 
+	description="Plataforma de evaluación de código Python con trazabilidad avanzada y contenedores Docker. Integrada con Canvas LMS vía LTI 1.3 para garantizar integridad académica y detectar uso indebido de IA."
+>
 	<Navbar />
 	
-	<main>
+	<main id="main-content">
 		<Hero />
-		<Challenge />
-		<Features />
-		<Traceability />
-		<Stack /> </main>
+		<section class="fade-in-up">
+			<Challenge />
+		</section>
+		<section class="fade-in-up">
+			<Features />
+		</section>
+		<section class="fade-in-up">
+			<Traceability />
+		</section>
+		<section class="fade-in-up">
+			<Tutorials />
+		</section>
+		<section class="fade-in-up">
+			<FAQ />
+		</section>
+		<section class="fade-in-up">
+			<Stack />
+		</section>
+	</main>
 
-	<Footer /> </Layout>
+	<Footer />
+	
+	<script>
+		function setupScrollAnimations() {
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('visible');
+					}
+				});
+			}, {
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px'
+			});
+			
+			document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+		}
+		
+		setupScrollAnimations();
+		document.addEventListener('astro:page-load', setupScrollAnimations);
+	</script>
+</Layout>

@@ -1,0 +1,481 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+// EmailJS configuration from environment variables
+const EMAILJS_SERVICE_ID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY;
+---
+
+<Layout title="Contáctanos - Edurun">
+  <Navbar />
+  
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Header Section -->
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 bg-edurun-blue/10 border border-edurun-blue/20 rounded-full px-4 py-1.5 mb-6">
+          <span class="flex h-2 w-2 rounded-full bg-edurun-blue"></span>
+          <span class="text-sm font-medium text-edurun-blue tracking-wide">Estamos aquí para ayudarte</span>
+        </div>
+        
+        <h1 class="text-5xl md:text-6xl font-extrabold text-edurun-dark tracking-tight mb-6">
+          ¿Listo para <span class="text-transparent bg-clip-text bg-gradient-to-r from-edurun-blue to-edurun-purple">transformar</span> tus evaluaciones?
+        </h1>
+        
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Cuéntanos sobre tu institución y descubre cómo Edurun puede ayudarte a mantener la integridad académica en tus cursos de programación.
+        </p>
+      </div>
+
+      <!-- Main Content Grid -->
+      <div class="grid md:grid-cols-2 gap-8 items-start">
+        
+        <!-- Contact Form -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-10">
+          <h2 class="text-2xl font-bold text-edurun-dark mb-6">Envíanos un mensaje</h2>
+          
+          <form id="contact-form" class="space-y-4">
+            <!-- Honeypot field (hidden from users, catches bots) -->
+            <input 
+              type="text" 
+              name="honeypot" 
+              id="honeypot"
+              class="hidden" 
+              tabindex="-1" 
+              autocomplete="off"
+              aria-hidden="true"
+            />
+            
+            <!-- Name -->
+            <div>
+              <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
+                Nombre completo <span class="text-red-500" aria-label="requerido">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                required
+                minlength="2"
+                maxlength="100"
+                autocomplete="name"
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all text-base"
+                placeholder="Juan Pérez"
+              />
+              <span class="text-red-500 text-sm mt-1 hidden" id="name-error"></span>
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
+                Email institucional <span class="text-red-500" aria-label="requerido">*</span>
+              </label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                required
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$"
+                autocomplete="email"
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all text-base"
+                placeholder="juan.perez@universidad.edu"
+              />
+              <span class="text-red-500 text-sm mt-1 hidden" id="email-error"></span>
+            </div>
+
+            <!-- Institution -->
+            <div>
+              <label for="institution" class="block text-sm font-semibold text-gray-700 mb-2">
+                Institución <span class="text-red-500" aria-label="requerido">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="institution" 
+                name="institution" 
+                required
+                minlength="2"
+                maxlength="150"
+                autocomplete="organization"
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all text-base"
+                placeholder="Universidad de Chile"
+              />
+              <span class="text-red-500 text-sm mt-1 hidden" id="institution-error"></span>
+            </div>
+
+            <!-- Role -->
+            <div>
+              <label for="role" class="block text-sm font-semibold text-gray-700 mb-2">
+                Cargo <span class="text-red-500" aria-label="requerido">*</span>
+              </label>
+              <select 
+                id="role" 
+                name="role" 
+                required
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all bg-white text-base"
+              >
+                <option value="">Selecciona tu cargo</option>
+                <option value="profesor">Profesor/Docente</option>
+                <option value="coordinador">Coordinador Académico</option>
+                <option value="director">Director de Departamento</option>
+                <option value="ti">Responsable de TI</option>
+                <option value="otro">Otro</option>
+              </select>
+              <span class="text-red-500 text-sm mt-1 hidden" id="role-error"></span>
+            </div>
+
+            <!-- Subject -->
+            <div>
+              <label for="subject" class="block text-sm font-semibold text-gray-700 mb-2">
+                Asunto <span class="text-red-500" aria-label="requerido">*</span>
+              </label>
+              <select 
+                id="subject" 
+                name="subject" 
+                required
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all bg-white text-base"
+              >
+                <option value="">Selecciona un asunto</option>
+                <option value="demo">Solicitar demo</option>
+                <option value="integration">Integración con LMS</option>
+                <option value="support">Soporte técnico</option>
+                <option value="other">Otro</option>
+              </select>
+              <span class="text-red-500 text-sm mt-1 hidden" id="subject-error"></span>
+            </div>
+
+            <!-- Message -->
+            <div>
+              <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">
+                Mensaje <span class="text-red-500" aria-label="requerido">*</span>
+              </label>
+              <textarea 
+                id="message" 
+                name="message" 
+                rows="5" 
+                required
+                minlength="10"
+                maxlength="1000"
+                aria-required="true"
+                class="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-300 focus:border-edurun-blue focus:ring-2 focus:ring-edurun-blue/20 outline-none transition-all resize-none text-base"
+                placeholder="Cuéntanos más sobre tus necesidades..."
+              ></textarea>
+              <span class="text-gray-500 text-sm mt-1" id="message-counter">0/1000 caracteres</span>
+              <span class="text-red-500 text-sm mt-1 hidden" id="message-error"></span>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit"
+              id="submit-btn"
+              class="w-full bg-gradient-to-r from-edurun-blue to-edurun-purple text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            >
+              <span id="button-text">Enviar mensaje</span>
+              <svg id="button-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </button>
+          </form>
+
+          <!-- Success Message (Hidden by default) -->
+          <div id="success-message" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+            <div class="flex items-center gap-3">
+              <svg class="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <div>
+                <p class="font-semibold text-green-900">¡Mensaje enviado con éxito!</p>
+                <p class="text-sm text-green-700">Nos pondremos en contacto contigo pronto.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Error Message (Hidden by default) -->
+          <div id="error-message" class="hidden mt-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <div class="flex items-center gap-3">
+              <svg class="w-6 h-6 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+              <div>
+                <p class="font-semibold text-red-900">Error al enviar el mensaje</p>
+                <p class="text-sm text-red-700">Por favor, intenta nuevamente o contáctanos directamente por email.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Information & Features -->
+        <div class="space-y-6">
+          
+          <!-- Quick Contact Cards -->
+          <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+            <h3 class="text-xl font-bold text-edurun-dark mb-6">Otras formas de contacto</h3>
+            
+            <div class="space-y-4">
+              <!-- Email -->
+              <a href="mailto:b.nezlara@uandresbello.edu" class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors group">
+                <div class="bg-gradient-to-br from-edurun-blue/10 to-edurun-purple/10 p-3 rounded-xl group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 text-edurun-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">Email</p>
+                  <p class="text-sm text-edurun-blue">b.nezlara@uandresbello.edu</p>
+                </div>
+              </a>
+
+              <!-- Documentation -->
+              <a href="/docs/guia-docente" class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors group">
+                <div class="bg-gradient-to-br from-edurun-blue/10 to-edurun-purple/10 p-3 rounded-xl group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 text-edurun-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">Documentación</p>
+                  <p class="text-sm text-gray-600">Explora nuestras guías y recursos</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Why Choose Edurun -->
+          <div class="bg-gradient-to-br from-edurun-blue/5 to-edurun-purple/5 rounded-2xl border border-edurun-blue/20 p-8">
+            <h3 class="text-xl font-bold text-edurun-dark mb-4">¿Por qué elegir Edurun?</h3>
+            <ul class="space-y-3">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Integración nativa con Canvas LTI 1.3</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Trazabilidad completa de acciones del estudiante</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Entorno de ejecución aislado y seguro</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-edurun-blue mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-700">Soporte técnico especializado en español</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script define:vars={{ EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY }}>
+    // Initialize EmailJS
+    (function() {
+      // @ts-ignore
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+    })();
+
+    const form = document.getElementById('contact-form');
+    const successMessage = document.getElementById('success-message');
+    const errorMessage = document.getElementById('error-message');
+    const submitButton = document.getElementById('submit-btn');
+    const buttonText = document.getElementById('button-text');
+    const buttonIcon = document.getElementById('button-icon');
+    const messageTextarea = document.getElementById('message');
+    const messageCounter = document.getElementById('message-counter');
+    
+    // Character counter for message
+    messageTextarea?.addEventListener('input', (e) => {
+      const target = e.target;
+      const length = target.value.length;
+      if (messageCounter) {
+        messageCounter.textContent = `${length}/1000 caracteres`;
+        if (length > 950) {
+          messageCounter.classList.add('text-red-500');
+          messageCounter.classList.remove('text-gray-500');
+        } else {
+          messageCounter.classList.remove('text-red-500');
+          messageCounter.classList.add('text-gray-500');
+        }
+      }
+    });
+
+    // Validation functions
+    function validateEmail(email) {
+      const re = /^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$/i;
+      return re.test(email);
+    }
+
+    function showError(fieldId, message) {
+      const errorSpan = document.getElementById(`${fieldId}-error`);
+      const field = document.getElementById(fieldId);
+      if (errorSpan && field) {
+        errorSpan.textContent = message;
+        errorSpan.classList.remove('hidden');
+        field.classList.add('border-red-500');
+        field.classList.remove('border-gray-300');
+      }
+    }
+
+    function clearError(fieldId) {
+      const errorSpan = document.getElementById(`${fieldId}-error`);
+      const field = document.getElementById(fieldId);
+      if (errorSpan && field) {
+        errorSpan.classList.add('hidden');
+        field.classList.remove('border-red-500');
+        field.classList.add('border-gray-300');
+      }
+    }
+
+    // Clear errors on input
+    ['name', 'email', 'institution', 'role', 'subject', 'message'].forEach(fieldId => {
+      document.getElementById(fieldId)?.addEventListener('input', () => clearError(fieldId));
+    });
+
+    // Rate limiting (simple client-side check)
+    let lastSubmitTime = 0;
+    const MIN_SUBMIT_INTERVAL = 60000; // 1 minute
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Check honeypot
+      const honeypot = document.getElementById('honeypot');
+      if (honeypot && honeypot.value !== '') {
+        console.warn('Bot detected via honeypot');
+        return;
+      }
+      
+      // Rate limiting check
+      const now = Date.now();
+      if (now - lastSubmitTime < MIN_SUBMIT_INTERVAL) {
+        if (errorMessage) {
+          errorMessage.querySelector('p').textContent = 'Por favor espera un minuto antes de enviar otro mensaje.';
+          errorMessage.classList.remove('hidden');
+        }
+        return;
+      }
+      
+      // Hide any previous messages
+      successMessage?.classList.add('hidden');
+      errorMessage?.classList.add('hidden');
+      
+      // Clear all errors
+      ['name', 'email', 'institution', 'role', 'subject', 'message'].forEach(clearError);
+
+      // Validate fields
+      let isValid = true;
+      const formData = new FormData(form);
+      
+      if (!formData.get('name') || formData.get('name').toString().trim().length < 2) {
+        showError('name', 'El nombre debe tener al menos 2 caracteres');
+        isValid = false;
+      }
+      
+      const email = formData.get('email')?.toString() || '';
+      if (!validateEmail(email)) {
+        showError('email', 'Por favor ingresa un email válido');
+        isValid = false;
+      }
+      
+      if (!formData.get('institution') || formData.get('institution').toString().trim().length < 2) {
+        showError('institution', 'Por favor ingresa el nombre de tu institución');
+        isValid = false;
+      }
+      
+      if (!formData.get('role') || formData.get('role') === '') {
+        showError('role', 'Por favor selecciona tu cargo');
+        isValid = false;
+      }
+      
+      if (!formData.get('subject') || formData.get('subject') === '') {
+        showError('subject', 'Por favor selecciona un asunto');
+        isValid = false;
+      }
+      
+      const message = formData.get('message')?.toString() || '';
+      if (message.trim().length < 10) {
+        showError('message', 'El mensaje debe tener al menos 10 caracteres');
+        isValid = false;
+      } else if (message.length > 1000) {
+        showError('message', 'El mensaje no puede exceder 1000 caracteres');
+        isValid = false;
+      }
+      
+      if (!isValid) {
+        return;
+      }
+
+      // Disable button and show loading state
+      if (submitButton && buttonText && buttonIcon) {
+        submitButton.disabled = true;
+        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+        buttonText.textContent = 'Enviando...';
+        buttonIcon.innerHTML = '<path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\" class=\"animate-spin\"></path>';
+      }
+
+      try {
+        // Send email using EmailJS
+        // @ts-ignore
+        const response = await emailjs.sendForm(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          form
+        );
+
+        console.log('Email sent successfully:', response);
+        
+        // Show success message
+        successMessage?.classList.remove('hidden');
+        form.reset();
+        
+        // Reset counter
+        if (messageCounter) {
+          messageCounter.textContent = '0/1000 caracteres';
+        }
+        
+        // Scroll to success message
+        successMessage?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Update last submit time
+        lastSubmitTime = now;
+        
+      } catch (error) {
+        console.error('Error sending email:', error);
+        if (errorMessage) {
+          const errorText = errorMessage.querySelector('p');
+          if (errorText) {
+            errorText.textContent = 'Hubo un error al enviar el mensaje. Por favor intenta nuevamente o contactanos directamente a contacto@edurun.cl';
+          }
+          errorMessage.classList.remove('hidden');
+        }
+        errorMessage?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } finally {
+        // Re-enable button
+        if (submitButton && buttonText && buttonIcon) {
+          submitButton.disabled = false;
+          submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+          buttonText.textContent = 'Enviar mensaje';
+          buttonIcon.innerHTML = '<path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M14 5l7 7m0 0l-7 7m7-7H3\"></path>';
+        }
+      }
+    });
+  </script>
+
+  <Footer />
+</Layout>

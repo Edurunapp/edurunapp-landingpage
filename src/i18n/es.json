@@ -1,0 +1,231 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "features": "Funcionalidades",
+    "integrity": "Integridad",
+    "docs": "Documentación",
+    "contact": "Contáctanos",
+    "language": "Idioma"
+  },
+  "hero": {
+    "badge": "Integración LTI 1.3 con Canvas LMS",
+    "title": "Integridad Académica",
+    "titleHighlight": "Sin Compromisos",
+    "subtitle": "Plataforma educativa que detecta plagio con IA, ejecuta código de forma segura en contenedores Docker, y proporciona trazabilidad completa del proceso de desarrollo.",
+    "ctaPrimary": "Ir a Demo",
+    "ctaSecondary": "Ver Documentación"
+  },
+  "features": {
+    "badge": "Características principales",
+    "title": "Todo lo que necesitas para evaluar código de forma segura",
+    "subtitle": "Desde la detección de plagio hasta la ejecución en contenedores aislados.",
+    "plagiarism": {
+      "title": "Detección de Plagio con IA",
+      "description": "Análisis semántico del código usando modelos de lenguaje para detectar similitudes más allá de la sintaxis."
+    },
+    "docker": {
+      "title": "Ejecución Segura en Docker",
+      "description": "Cada código se ejecuta en contenedores aislados y efímeros con límites de recursos, garantizando seguridad total."
+    },
+    "traceability": {
+      "title": "Trazabilidad Completa",
+      "description": "Registra cada acción del estudiante: teclas presionadas, tiempo invertido, y cambios en el código en tiempo real."
+    },
+    "lti": {
+      "title": "Integración LTI 1.3",
+      "description": "Conexión nativa con Canvas LMS. Las calificaciones se sincronizan automáticamente sin intervención manual."
+    },
+    "pytest": {
+      "title": "Evaluación con pytest",
+      "description": "Los profesores definen tests unitarios en pytest. El sistema ejecuta y evalúa automáticamente cada entrega."
+    },
+    "realtime": {
+      "title": "Editor en Tiempo Real",
+      "description": "Los estudiantes escriben código directamente en el navegador con resaltado de sintaxis y autocompletado."
+    }
+  },
+  "challenge": {
+    "badge": "El desafío",
+    "title": "Integridad Académica Sin Compromisos",
+    "subtitle": "La IA generativa ha cambiado las reglas del juego en educación.",
+    "problem": "El Problema",
+    "problemText": "Estudiantes pueden generar código completo con ChatGPT en segundos, haciendo imposible verificar la autoría real del trabajo.",
+    "solution": "Nuestra Solución",
+    "solutionText": "Trazabilidad completa del proceso de desarrollo: cada tecla presionada, cada pausa, cada modificación queda registrada. No evaluamos solo el código final, sino todo el proceso de pensamiento detrás de él.",
+    "features": {
+      "keystroke": "Registro de pulsaciones de teclas",
+      "time": "Tiempo invertido en cada línea",
+      "changes": "Historial de cambios",
+      "patterns": "Análisis de patrones de escritura"
+    }
+  },
+  "stack": {
+    "badge": "Stack tecnológico",
+    "title": "Construido con tecnologías modernas y confiables",
+    "subtitle": "Una arquitectura robusta que garantiza seguridad, escalabilidad y rendimiento."
+  },
+  "traceability": {
+    "badge": "Trazabilidad",
+    "title": "Cada acción cuenta una historia",
+    "subtitle": "Convierte datos de desarrollo en insights sobre el proceso de aprendizaje.",
+    "features": {
+      "keystroke": {
+        "title": "Registro de Teclas",
+        "description": "Captura cada tecla presionada, incluyendo copy-paste, permitiendo identificar código copiado de fuentes externas."
+      },
+      "timeline": {
+        "title": "Línea de Tiempo",
+        "description": "Visualiza la evolución del código minuto a minuto. Detecta pausas sospechosas o cambios repentinos masivos."
+      },
+      "heatmap": {
+        "title": "Mapa de Calor",
+        "description": "Identifica en qué partes del código el estudiante invirtió más tiempo, revelando áreas de dificultad o posible copia."
+      },
+      "analysis": {
+        "title": "Análisis de Patrones",
+        "description": "Algoritmos de ML detectan patrones de escritura inconsistentes que sugieren uso de IA o código copiado."
+      }
+    }
+  },
+  "tutorials": {
+    "badge": "Video Tutoriales",
+    "title": "Aprende a usar Edurun en minutos",
+    "subtitle": "Guías paso a paso para empezar a evaluar código Python con integridad académica.",
+    "video1": {
+      "title": "Guía Para El Docente",
+      "description": "Aprende cómo usar Edurun en tu curso de Canvas en menos de 10 minutos.",
+      "embedUrl": "https://www.youtube.com/embed/1dnJjYyDBvQ"
+    },
+    "video2": {
+      "title": "Guía Para El Estudiante",
+      "description": "Guía para usar Edurun y realizar los exámenes.",
+      "embedUrl": "https://www.youtube.com/embed/jz00Vw85dmo"
+    },
+    "ctaText": "¿Necesitas más ayuda? Consulta nuestra documentación completa.",
+    "ctaButton": "Ver Documentación"
+  },
+  "faq": {
+    "badge": "Preguntas frecuentes",
+    "title": "¿Tienes dudas? Te ayudamos",
+    "subtitle": "Respuestas a las preguntas más comunes sobre Edurun.",
+    "items": {
+      "lti": {
+        "question": "¿Cómo funciona la integración con Canvas?",
+        "answer": "Edurun implementa el protocolo LTI 1.3 (Learning Tools Interoperability) de manera nativa. Esto significa que los estudiantes acceden a Edurun directamente desde Canvas sin necesidad de iniciar sesión por separado. Las calificaciones obtenidas en Edurun se sincronizan automáticamente con el libro de calificaciones de Canvas. La configuración inicial toma aproximadamente 10 minutos siguiendo nuestra <a href=\"/docs/instalacion/canvas\" class=\"text-edurun-blue hover:underline\">guía de instalación</a>."
+      },
+      "ai": {
+        "question": "¿Cómo detectan el uso de IA como ChatGPT?",
+        "answer": "No dependemos de un único método. Combinamos: (1) <strong>Análisis de patrones de escritura</strong>: detectamos cambios bruscos en estilo o velocidad que sugieren copy-paste de código generado por IA. (2) <strong>Comparación semántica</strong>: comparamos el código del estudiante con patrones típicos de ChatGPT/Copilot. (3) <strong>Trazabilidad temporal</strong>: código complejo que aparece de golpe sin iteraciones previas es altamente sospechoso. El sistema genera un reporte de confianza que el profesor interpreta."
+      },
+      "languages": {
+        "question": "¿Solo soportan Python?",
+        "answer": "Actualmente, sí. Nos enfocamos en Python porque es el lenguaje más usado en cursos introductorios de programación y ciencia de datos. Sin embargo, la arquitectura está diseñada para ser agnóstica al lenguaje. Soporte para JavaScript, Java y C++ está en nuestro roadmap para 2026."
+      },
+      "security": {
+        "question": "¿Es seguro ejecutar código de estudiantes?",
+        "answer": "Absolutamente. Cada código se ejecuta en un <strong>contenedor Docker aislado y efímero</strong> con recursos limitados (CPU, memoria, tiempo de ejecución). Los contenedores no tienen acceso a la red ni al sistema de archivos del host. Después de la ejecución, el contenedor se destruye automáticamente, garantizando seguridad total."
+      },
+      "cloud": {
+        "question": "¿Necesito instalar algo en mi computadora?",
+        "answer": "No. Edurun es una <strong>plataforma 100% en la nube</strong>. Tanto profesores como estudiantes acceden desde el navegador web sin necesidad de instalar ningún software. Solo se requiere una conexión a internet y un navegador moderno (Chrome, Firefox, Safari o Edge)."
+      }
+    }
+  },
+  "contact": {
+    "badge": "Estamos aquí para ayudarte",
+    "title": "¿Listo para",
+    "titleHighlight": "transformar",
+    "titleEnd": "tus evaluaciones?",
+    "subtitle": "Cuéntanos sobre tu institución y descubre cómo Edurun puede ayudarte a mantener la integridad académica en tus cursos de programación.",
+    "formTitle": "Envíanos un mensaje",
+    "form": {
+      "name": "Nombre completo",
+      "email": "Email institucional",
+      "institution": "Institución",
+      "role": "Cargo",
+      "subject": "Asunto",
+      "message": "Mensaje",
+      "required": "requerido",
+      "send": "Enviar mensaje",
+      "sending": "Enviando...",
+      "success": "¡Mensaje enviado con éxito! Te responderemos pronto.",
+      "error": "Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.",
+      "placeholder": {
+        "name": "Juan Pérez",
+        "email": "juan.perez@universidad.edu",
+        "institution": "Universidad de Chile",
+        "message": "Cuéntanos sobre tus necesidades..."
+      },
+      "roleOptions": {
+        "select": "Selecciona tu cargo",
+        "profesor": "Profesor/Docente",
+        "coordinador": "Coordinador Académico",
+        "director": "Director de Departamento",
+        "ti": "Responsable de TI",
+        "otro": "Otro"
+      },
+      "subjectOptions": {
+        "select": "Selecciona un asunto",
+        "demo": "Solicitar demo",
+        "integration": "Integración con LMS",
+        "support": "Soporte técnico",
+        "other": "Otro"
+      }
+    },
+    "info": {
+      "title": "Información de contacto",
+      "email": "Email",
+      "schedule": "Horario de atención",
+      "scheduleTime": "Lunes a Viernes: 9:00 - 18:00 (CLT)",
+      "response": "Tiempo de respuesta",
+      "responseTime": "Respondemos en menos de 24 horas hábiles"
+    }
+  },
+  "footer": {
+    "description": "Plataforma educativa para evaluación de código Python con integridad académica, detección de plagio con IA y ejecución segura en Docker.",
+    "product": "Producto",
+    "resources": "Recursos",
+    "company": "Empresa",
+    "rights": "Todos los derechos reservados."
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "message": "Lo sentimos, la página que buscas no existe o ha sido movida.",
+    "home": "Volver al inicio",
+    "docs": "Ver documentación",
+    "quickLinks": "Enlaces rápidos"
+  },
+  "dashboard": {
+    "accuracy": "Precisión Promedio",
+    "ineffective": "Ineficaz",
+    "traditional": "Detectores Tradicionales",
+    "edurunTraceability": "Edurun (Trazabilidad)",
+    "visibility": "100% Visibilidad",
+    "disclaimer": "* Datos basados en estudios sobre detectores como GPTZero y DetectGPT.",
+    "student": "Estudiante",
+    "approved": "Aprobado",
+    "executions": "Ejecuciones",
+    "testsPassed": "Tests Pasados",
+    "totalTime": "Tiempo Total",
+    "suspiciousActivity": "Registro de Actividad Sospechosa",
+    "exitedFullscreen": "Salió de pantalla completa",
+    "copyPaste": "Copy-paste detectado"
+  },
+  "docs": {
+    "folders": {
+      "guia-docente": "Guía del Docente",
+      "teacher-guide": "Guía del Docente",
+      "instalacion": "Instalación",
+      "installation": "Instalación",
+      "arquitectura": "Arquitectura",
+      "architecture": "Arquitectura",
+      "riesgos": "Riesgos",
+      "risks": "Riesgos"
+    },
+    "nav": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "onThisPage": "En esta página"
+    }
+  }
+}

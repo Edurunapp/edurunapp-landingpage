@@ -4,11 +4,14 @@ import type { CollectionEntry } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
 import { ClientRouter } from 'astro:transitions'; 
 import ThemeToggle from '../components/ThemeToggle.astro';
+import LanguageSelector from '../components/LanguageSelector.astro';
+import { useTranslations } from '../i18n/utils';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   headings?: MarkdownHeading[];
+  lang?: 'es' | 'en';
 }
 
 type GroupedDocs = Record<string, {
@@ -17,23 +20,34 @@ type GroupedDocs = Record<string, {
   items?: CollectionEntry<'docs'>[];
 }>;
 
-const { title, headings } = Astro.props;
+const { title, headings, lang = 'es' } = Astro.props;
 
-// --- Lógica de Documentos ---
-const allDocs = await getCollection('docs');
+// Get translations
+const t = useTranslations(lang);
+
+// Filter docs by language
+const allDocs = await getCollection('docs', ({ slug }) => {
+  if (lang === 'en') return slug.startsWith('en/');
+  return !slug.startsWith('en/');
+});
+
 const groupedDocs = allDocs.reduce<GroupedDocs>((acc, doc) => {
-  const parts = doc.slug.split('/');
+  // Remove 'en/' prefix if present for grouping
+  const cleanSlug = doc.slug.replace(/^en\//, '');
+  const parts = cleanSlug.split('/');
   if (parts.length > 1) {
     const folderName = parts[0];
     if (!acc[folderName]) acc[folderName] = { type: 'folder', items: [] };
     acc[folderName].items?.push(doc);
   } else {
-    acc[doc.slug] = { type: 'file', item: doc };
+    acc[cleanSlug] = { type: 'file', item: doc };
   }
   return acc;
 }, {});
 
-const sortOrder = ['guia-docente', 'instalacion', 'arquitectura', 'riesgos'];
+const sortOrder = lang === 'es' 
+  ? ['guia-docente', 'instalacion', 'arquitectura', 'riesgos']
+  : ['teacher-guide', 'installation', 'architecture', 'risks'];
 
 const flatDocs = sortOrder.flatMap(key => {
   const entry = groupedDocs[key];
@@ -47,99 +61,124 @@ const currentSlug = Astro.url.pathname.replace(/^\/docs\//, '').replace(/\/$/, '
 const currentIndex = flatDocs.findIndex(doc => doc?.slug === currentSlug);
 const prevDoc = flatDocs[currentIndex - 1];
 const nextDoc = flatDocs[currentIndex + 1];
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const description = lang === 'es' 
+  ? `Documentación completa de ${title}. Aprende cómo usar Edurun para garantizar integridad académica en evaluaciones de Python con LTI 1.3 y Canvas LMS.`
+  : `Complete documentation for ${title}. Learn how to use Edurun to ensure academic integrity in Python assessments with LTI 1.3 and Canvas LMS.`;
 ---
 
 <!doctype html>
-<html lang="es" class="scroll-smooth">
+<html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/webp" href="/logo.webp" />
-    <title>{title} | Documentación Edurun</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    
+    <!-- Primary Meta Tags -->
+    <title>{title} | {lang === 'es' ? 'Documentación Edurun' : 'Edurun Documentation'}</title>
+    <meta name="title" content={`${title} | ${lang === 'es' ? 'Documentación Edurun' : 'Edurun Documentation'}`} />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonicalURL} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={`${title} | ${lang === 'es' ? 'Documentación Edurun' : 'Edurun Documentation'}`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={lang === 'es' ? 'Edurun Docs' : 'Edurun Documentation'} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={`${title} | ${lang === 'es' ? 'Documentación Edurun' : 'Edurun Documentation'}`} />
+    <meta property="twitter:description" content={description} />
+    
     <ClientRouter />
+    
+    <!-- Disable view transitions for docs -->
+    <meta name="astro-view-transitions-enabled" content="false" />
+    <meta name="astro-view-transitions-fallback" content="none" />
 
+    <!-- CRITICAL: Apply theme BEFORE any rendering -->
     <script is:inline>
-      const applyTheme = () => {
-        const theme = typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : 'light';
-        if (theme === 'dark') document.documentElement.classList.add('dark');
-        else document.documentElement.classList.remove('dark');
-      };
-      applyTheme();
-      document.addEventListener('astro:after-swap', applyTheme);
+      (function() {
+        const theme = localStorage.getItem('theme') || 'light';
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      })();
     </script>
 
     <style is:global>
-        /* Ocultar banner de Google */
-        .goog-te-banner-frame { display: none !important; }
-        body { top: 0px !important; }
-        
-        /* Ocultar selector de Google (VISIBILITY HIDDEN, NO DISPLAY NONE) */
-        #google_translate_element { 
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-            overflow: hidden;
-            z-index: -1; 
-            visibility: hidden;
+        /* CRITICAL: Prevent white flash with immediate background */
+        html {
+            background-color: white !important;
         }
         
+        html.dark {
+            background-color: #1e1e20 !important;
+        }
+        
+        body {
+            background-color: transparent !important;
+        }
+        
+        /* Force instant view transitions without animation */
+        ::view-transition-group(root) {
+            animation-duration: 0s !important;
+        }
+        
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation: none !important;
+            mix-blend-mode: normal !important;
+        }
+        
+        ::view-transition-image-pair(root) {
+            isolation: auto !important;
+        }
+        
+        /* Ocultar UI de Google Translate completamente */
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0px !important; }
+        #google_translate_element { display: none !important; }
         .skiptranslate { display: none !important; }
         button:focus { outline: none !important; }
     </style>
   </head>
   
-  <body class="bg-white dark:bg-[#1e1e20] text-gray-800 dark:text-gray-200 min-h-screen transition-colors duration-300 antialiased">
+  <body class="bg-white dark:bg-[#1e1e20] text-gray-800 dark:text-gray-200 min-h-screen antialiased">
     
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#1e1e20]/95 border-b border-gray-200 dark:border-gray-700 backdrop-blur-md h-16 transition-colors duration-300">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#1e1e20]/95 border-b border-gray-200 dark:border-gray-700 backdrop-blur-md h-16">
       <div class="h-full px-4 md:px-6 flex items-center justify-between">
         
         <div class="flex items-center gap-4">
             <button id="menu-toggle" class="md:hidden text-gray-500 hover:text-edurun-blue focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
-            <a href="/" class="flex items-center gap-2 group">
-                <img src="/logo.webp" class="w-8 h-8 group-hover:scale-110 transition-transform" alt="Logo">
+            <a href="/" data-astro-reload class="flex items-center gap-2 group">
+                <img src="/logo.png" class="w-8 h-8 group-hover:scale-110 transition-transform" alt="Logo">
                 <span class="font-bold text-xl text-gray-900 dark:text-white tracking-tight">Edurun<span class="text-edurun-blue">Docs</span></span>
             </a>
         </div>
 
         <div class="flex items-center gap-4">
-             <div class="relative group hidden sm:block">
-                <button type="button" class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-edurun-blue transition-colors px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50 dark:bg-gray-800">
-                    <span id="current-lang-label">Español</span>
-                    <svg class="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </button>
-                
-                <div class="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top-right z-[100] py-1 flex flex-col overflow-hidden">
-                    <button type="button" onclick="changeLanguage('es')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2 cursor-pointer">
-                        <span>🇪🇸 Español</span>
-                    </button>
-                    <button type="button" onclick="changeLanguage('en')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2 cursor-pointer">
-                        <span>🇺🇸 English</span>
-                    </button>
-                    <button type="button" onclick="changeLanguage('pt')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-edurun-blue flex items-center gap-2 cursor-pointer">
-                        <span>🇧🇷 Português</span>
-                    </button>
-                </div>
-            </div>
-
+            <LanguageSelector />
             <ThemeToggle />
         </div>
       </div>
     </header>
 
     <div class="flex pt-16 min-h-screen">
-        
-        <aside id="sidebar-left" class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-4rem)] transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out bg-gray-50 dark:bg-[#18181a] border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
+        <aside id="sidebar-left" class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-4rem)] transform -translate-x-full md:translate-x-0 bg-gray-50 dark:bg-[#18181a] border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
             <div class="p-6">
                 <nav class="space-y-2">
                     {sortOrder.map((key) => {
                         const entry = groupedDocs[key];
                         if (!entry) return null;
-                        
                         if (entry.type === 'file' && entry.item) {
                             return (
                                 <a href={`/docs/${entry.item.slug}`} class={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${Astro.url.pathname.includes(entry.item.slug) ? 'bg-blue-50 dark:bg-blue-900/20 text-edurun-blue' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
@@ -152,13 +191,13 @@ const nextDoc = flatDocs[currentIndex + 1];
                                     <summary class="flex items-center justify-between px-3 py-2 text-sm font-bold text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md select-none transition-colors">
                                         <span class="capitalize flex items-center gap-2">
                                             <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
-                                            {key.replace('-', ' ')}
+                                            {(t.docs.folders as any)[key] || key.replace('-', ' ')}
                                         </span>
                                         <svg class="w-4 h-4 transition-transform group-open/folder:rotate-180 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                                     </summary>
                                     <div class="mt-1 ml-4 border-l-2 border-gray-200 dark:border-gray-700 pl-2 space-y-1">
                                         {entry.items.map(doc => (
-                                            <a href={`/docs/${doc.slug}`} class={`block px-3 py-1.5 rounded-md text-sm transition-colors ${Astro.url.pathname.includes(doc.slug) ? 'text-edurun-blue font-semibold bg-blue-50/50 dark:bg-blue-900/10' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
+                                            <a href={`/docs/${doc.slug}`} class={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${Astro.url.pathname.includes(doc.slug) ? 'bg-blue-50 dark:bg-blue-900/20 text-edurun-blue' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
                                                 {doc.data.title}
                                             </a>
                                         ))}
@@ -188,14 +227,14 @@ const nextDoc = flatDocs[currentIndex + 1];
                 <div class="mt-16 pt-8 border-t border-gray-100 dark:border-gray-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {prevDoc ? (
                         <a href={`/docs/${prevDoc.slug}`} class="group p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-edurun-blue dark:hover:border-edurun-blue hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all">
-                            <div class="text-xs text-gray-400 font-medium uppercase mb-1">Anterior</div>
+                            <div class="text-xs text-gray-400 font-medium uppercase mb-1">{t.docs.nav.previous}</div>
                             <div class="text-edurun-blue font-semibold group-hover:underline">{prevDoc.data.title}</div>
                         </a>
                     ) : <div></div>}
                     
                     {nextDoc && (
                         <a href={`/docs/${nextDoc.slug}`} class="group p-4 border border-gray-200 dark:border-gray-700 rounded-xl text-right hover:border-edurun-blue dark:hover:border-edurun-blue hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all">
-                            <div class="text-xs text-gray-400 font-medium uppercase mb-1">Siguiente</div>
+                            <div class="text-xs text-gray-400 font-medium uppercase mb-1">{t.docs.nav.next}</div>
                             <div class="text-edurun-blue font-semibold group-hover:underline">{nextDoc.data.title}</div>
                         </a>
                     )}
@@ -203,13 +242,13 @@ const nextDoc = flatDocs[currentIndex + 1];
             </div>
         </main>
 
-        <aside class="hidden xl:block fixed top-16 right-0 w-64 h-[calc(100vh-4rem)] bg-white dark:bg-[#1e1e20] border-l border-gray-200 dark:border-gray-700 overflow-y-auto transition-all duration-300 ease-in-out">
+        <aside class="hidden xl:block fixed top-16 right-0 w-64 h-[calc(100vh-4rem)] bg-white dark:bg-[#1e1e20] border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
             <div class="p-8">
-                <h5 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4">En esta página</h5>
-                <ul class="space-y-3 text-sm border-l-2 border-gray-100 dark:border-gray-800">
+                <h5 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4">{t.docs.nav.onThisPage}</h5>
+                <ul id="toc-list" class="space-y-3 text-sm border-l-2 border-gray-100 dark:border-gray-800">
                     {headings?.map((h) => (
                         <li class={`pl-3 -ml-[2px] ${h.depth === 3 ? 'pl-6' : ''}`}>
-                            <a href={`#${h.slug}`} class="block text-gray-500 dark:text-gray-400 hover:text-edurun-blue dark:hover:text-edurun-blue hover:border-l-2 hover:border-edurun-blue -ml-[2px] pl-3 py-0.5 transition-all truncate">
+                            <a href={`#${h.slug}`} data-toc-link class="block text-gray-500 dark:text-gray-400 hover:text-edurun-blue dark:hover:text-edurun-blue hover:border-l-2 hover:border-edurun-blue -ml-[2px] pl-3 py-0.5 transition-all truncate">
                                 {h.text}
                             </a>
                         </li>
@@ -217,51 +256,122 @@ const nextDoc = flatDocs[currentIndex + 1];
                 </ul>
             </div>
         </aside>
-
     </div>
 
     <div id="google_translate_element"></div>
 
     <script is:inline>
-        // 1. Inicializar Google Translate
-        window['googleTranslateElementInit'] = function() {
-            if (window['google'] && window['google'].translate) {
-                new window['google'].translate.TranslateElement({
-                    pageLanguage: 'es', 
-                    includedLanguages: 'en,pt,es',
-                    autoDisplay: false 
-                }, 'google_translate_element');
+        // Reapply theme on every navigation
+        function applyTheme() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
             }
         }
+        
+        // Apply on page swap
+        document.addEventListener('astro:after-swap', applyTheme);
+        document.addEventListener('astro:page-load', applyTheme);
+        
+        // Update active sidebar item on navigation
+        function updateActiveNav() {
+            const currentPath = window.location.pathname;
+            
+            // Remove all active states
+            document.querySelectorAll('#sidebar-left a').forEach(link => {
+                link.classList.remove('bg-blue-50', 'dark:bg-blue-900/20', 'text-edurun-blue', 'font-medium');
+                if (!link.classList.contains('hover:bg-gray-100')) {
+                    link.classList.add('text-gray-600', 'dark:text-gray-400');
+                } else {
+                    link.classList.add('text-gray-500', 'dark:text-gray-400');
+                }
+            });
+            
+            // Add active state to current page
+            document.querySelectorAll('#sidebar-left a').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && currentPath.includes(href.replace('/docs/', ''))) {
+                    link.classList.remove('text-gray-600', 'dark:text-gray-400', 'text-gray-500');
+                    link.classList.add('bg-blue-50', 'dark:bg-blue-900/20', 'text-edurun-blue', 'font-medium');
+                }
+            });
+        }
+        
+        // Run on page load and navigation
+        document.addEventListener('astro:page-load', updateActiveNav);
+        document.addEventListener('astro:after-swap', updateActiveNav);
+        
+        // TOC: Update active heading based on scroll and smooth scroll on click
+        function setupTOC() {
+            const tocLinks = document.querySelectorAll('[data-toc-link]');
+            const headings = document.querySelectorAll('.prose h2[id], .prose h3[id]');
+            
+            // Smooth scroll on TOC link click
+            tocLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href')?.substring(1);
+                    const targetElement = document.getElementById(targetId || '');
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Update URL without triggering navigation
+                        history.pushState(null, '', `#${targetId}`);
+                    }
+                });
+            });
+            
+            // Highlight active heading on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        tocLinks.forEach(link => {
+                            link.classList.remove('text-edurun-blue', 'border-l-2', 'border-edurun-blue', 'font-medium');
+                            link.classList.add('text-gray-500', 'dark:text-gray-400');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.remove('text-gray-500', 'dark:text-gray-400');
+                                link.classList.add('text-edurun-blue', 'border-l-2', 'border-edurun-blue', 'font-medium');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: '-100px 0px -66%' });
+            
+            headings.forEach(heading => observer.observe(heading));
+        }
+        
+        document.addEventListener('astro:page-load', setupTOC);
+        document.addEventListener('astro:after-swap', setupTOC);
+    
+        window['googleTranslateElementInit'] = function() {
+            new google.translate.TranslateElement({ pageLanguage: 'es', includedLanguages: 'en,pt,es', autoDisplay: false }, 'google_translate_element');
+        }
 
-        // 2. Función de Cambio de Idioma (TRY HARD)
+        // --- FUNCIÓN NUCLEAR: SET COOKIE & RELOAD ---
         window['changeLanguage'] = function(lang) {
-            // Actualizar etiqueta visual inmediatamente
-            const labels = { 'es': 'Español', 'en': 'English', 'pt': 'Português' };
-            const label = document.getElementById('current-lang-label');
-            if(label) label.innerText = labels[lang] || 'Idioma';
+            console.log("Forzando cambio de idioma a:", lang);
+            
+            const domain = window.location.hostname;
+            
+            // 1. Limpiar cookies antiguas (para evitar conflictos)
+            document.cookie = `googtrans=; path=/; domain=${domain}; expires=Thu, 01 Jan 1970 00:00:00 UTC`;
+            document.cookie = `googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC`;
 
-            // Método A: Intentar usar el select de Google (Si existe y cargó)
-            const select = document.querySelector('.goog-te-combo');
-            if (select) {
-                select.value = lang;
-                select.dispatchEvent(new Event('change', { bubbles: true })); // IMPORTANTE: bubbles: true
-            } 
-            
-            // Método B: Forzar Cookie y Recargar (Esto arregla el 99% de fallos en localhost)
-            // Google Translate lee la cookie 'googtrans'
-            document.cookie = `googtrans=/es/${lang}; path=/`; 
-            
-            // Si el select no funcionó instantáneamente (o no existe), recargamos la página para aplicar la cookie
-            if (!select || select.value !== lang) {
-                console.log("Forzando recarga para traducción...");
-                setTimeout(() => location.reload(), 200);
+            if (lang !== 'es') {
+                // 2. Si no es el idioma original, establecer la cookie mágica
+                // Google usa: /idioma_origen/idioma_destino
+                document.cookie = `googtrans=/es/${lang}; path=/; domain=${domain}`;
+                document.cookie = `googtrans=/es/${lang}; path=/;`; // Doble seguridad
             }
+
+            // 3. Recargar la página para que Google detecte la cookie y traduzca
+            location.reload();
         };
 
-        // 3. UI Logic (Sidebar, Toggle, Label Update)
         function setupUI() {
-            // Actualizar etiqueta según cookie al cargar
+            // Actualizar etiqueta al cargar leyendo la cookie
             const match = document.cookie.match(/googtrans=\/es\/(\w+)/);
             if (match && match[1]) {
                 const lang = match[1];
@@ -270,11 +380,9 @@ const nextDoc = flatDocs[currentIndex + 1];
                 if(label && labels[lang]) label.innerText = labels[lang];
             }
 
-            // Menú Móvil
             const btn = document.getElementById('menu-toggle');
             const sidebar = document.getElementById('sidebar-left');
             const backdrop = document.getElementById('backdrop');
-            
             const toggle = () => {
                 if(sidebar && backdrop) {
                     const isClosed = sidebar.classList.contains('-translate-x-full');
@@ -290,7 +398,6 @@ const nextDoc = flatDocs[currentIndex + 1];
             if(btn) btn.addEventListener('click', toggle);
             if(backdrop) backdrop.addEventListener('click', toggle);
 
-            // Copy buttons
             document.querySelectorAll('pre').forEach((pre) => {
               if (pre.parentNode && pre.parentNode.querySelector('.copy-code')) return;
               const wrapper = document.createElement('div');
@@ -313,7 +420,6 @@ const nextDoc = flatDocs[currentIndex + 1];
               });
             });
         }
-
         setupUI();
         document.addEventListener('astro:page-load', setupUI);
     </script>

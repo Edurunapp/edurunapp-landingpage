@@ -1,0 +1,39 @@
+---
+// Floating CTA button that appears on scroll
+---
+<div id="floating-cta" class="floating-cta">
+  <a 
+    href="/contacto" 
+    class="flex items-center gap-2 bg-gradient-to-r from-edurun-blue to-edurun-purple text-white px-6 py-3 rounded-full font-semibold shadow-2xl hover:shadow-xl transition-all hover:scale-105 group"
+  >
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+    </svg>
+    <span>Contáctanos</span>
+  </a>
+</div>
+
+<script>
+  function setupFloatingCTA() {
+    const floatingCTA = document.getElementById('floating-cta');
+    let lastScroll = 0;
+    
+    const handleScroll = () => {
+      const currentScroll = window.pageYOffset;
+      
+      // Show CTA after scrolling down 500px
+      if (currentScroll > 500) {
+        floatingCTA?.classList.add('show');
+      } else {
+        floatingCTA?.classList.remove('show');
+      }
+      
+      lastScroll = currentScroll;
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  }
+  
+  setupFloatingCTA();
+  document.addEventListener('astro:page-load', setupFloatingCTA);
+</script>
